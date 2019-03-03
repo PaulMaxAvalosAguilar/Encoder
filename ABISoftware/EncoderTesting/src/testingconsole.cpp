@@ -1,6 +1,8 @@
 #include "testingconsole.h"
 #include "ui_testingconsole.h"
 #include <QtMath>
+#include <QDebug>
+#include <iostream>
 
 TestingConsole::TestingConsole(QWidget *parent, QSerialPort *port) :
     QWidget(parent),
@@ -8,7 +10,8 @@ TestingConsole::TestingConsole(QWidget *parent, QSerialPort *port) :
     m_serial(port),
     m_timer(new QTimer(this)),
     encoderTimesWritten(0),
-    encoderPosition(0)
+    encoderPosition(0),
+    extractedValues()
 {
     ui->setupUi(this);
 
@@ -112,18 +115,11 @@ void TestingConsole::parseLine(const QString &line)
     }else if(line.contains("SHW")){
         sendMessage = "AOK\n";
         emit writeData(sendMessage);
-
-        long num = 0;
-
-        QStringList signs;
-        QStringList numbers;
-
-        /*
         if(line.contains("001B")){
 
-            const int numberOfValues = 4;
-            const int byteSize = 2;
-            readNXBytesCharacteristic(line, numberOfValues, byteSize, signs,numbers);
+            const int numberOfValues = 8;
+
+            readNXBytesCharacteristic(line, numberOfValues, extractedValues);
 
             static int firstTimeTimer = 1;
             if(firstTimeTimer == 1){
@@ -135,15 +131,18 @@ void TestingConsole::parseLine(const QString &line)
             sendMessage = "AOK\n";
             emit writeData(sendMessage);
 
-            for(int i = 0; i < numberOfValues; i ++){
-                QString completeData;
-                completeData.append(signs.at(i));
-                num = numbers.at(i).toUInt(nullptr,16);
-                completeData.append(QString::number(num));
+            QString outputData;
+            for(int i = 0; i < numberOfValues; i ++){                
+                int num = extractedValues.at(i);
                 encoderPosition = num;
-                ui->posvalLabel->setText(completeData);
+                outputData.append((num >= 0)? "+":"-");
+                outputData.append(QString::number((num >= 0)? num: -num));
+                ui->posvalLabel->setText(outputData);
+                outputData.clear();
             }
-
+            extractedValues.clear();
+        }
+        /*
         }else if(line.contains("0018")){
 
             const int numberOfValues = 1;
@@ -160,13 +159,7 @@ void TestingConsole::parseLine(const QString &line)
                 ui->battvalLabel->setText(completeData);
             }
         }
-        */
-
-        sendMessage = "AOK\n";
-        emit writeData(sendMessage);
-
-        signs.clear();
-        numbers.clear();
+       */
     }
 }
 
@@ -175,31 +168,40 @@ Console *TestingConsole::getConsole()
     return ui->m_console;
 }
 
-void TestingConsole::readNXBytesCharacteristic(const QString &line, int n, int x, QStringList &signs, QStringList &numbers)
+void TestingConsole::readNXBytesCharacteristic(const QString &line, int numberOfValues, std::deque<int> &numbers)
 {
+    int valueBytesSize = 2;
     auto encoderStringIterator = line.begin()+9;
-    for(int i = 0; i < n; i++){
-        QString encodedSign = "";
-        QString number = "";
-        for(auto iterator = encoderStringIterator;
-            iterator < encoderStringIterator + 2;
-            iterator++){
-            encodedSign.append(*iterator);
-        }
-        encoderStringIterator +=2;
-        for(auto iterator = encoderStringIterator;
-            iterator < encoderStringIterator+(x*2);
-            iterator++){
-            number.append(*iterator);
-        }
-        encoderStringIterator +=(x*2);
 
-        if(encodedSign == "00"){
-            signs.push_back("+");
-        }else{
-            signs.push_back("-");
+    QString hexSignsString = "";
+    uint signs = 0;
+    QString dataStringValue = "";
+    int value;
+
+    for(auto iterator = encoderStringIterator; iterator < encoderStringIterator + 2;
+        iterator++){
+        hexSignsString.append(*iterator);
+    }
+
+    signs = hexSignsString.toUInt(nullptr, 16);
+
+    encoderStringIterator += 2;
+    for(int i = 0; i < numberOfValues; i ++){
+
+        uint8_t sign = ( signs & (1 << i));
+
+        for(auto iterator = encoderStringIterator; iterator < encoderStringIterator + (valueBytesSize*2);
+            iterator++){
+            dataStringValue.append(*iterator);
         }
-        numbers.push_back(number);
+
+        value = (sign)? -dataStringValue.toInt(nullptr, 16): dataStringValue.toInt(nullptr,16);
+        qDebug()<< value;
+
+        numbers.push_back(value);
+
+        encoderStringIterator += (valueBytesSize*2);
+        dataStringValue.clear();
     }
 }
 

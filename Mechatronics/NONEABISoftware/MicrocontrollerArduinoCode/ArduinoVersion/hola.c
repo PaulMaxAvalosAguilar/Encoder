@@ -280,7 +280,7 @@ void timer1Config(void) {
   TCNT1 = 0;
   //Counter top = (T x Fcpu / N) - 1
   //Counter top = (.005"*20000000/8)-1
-  OCR1A = 12499;//Traduced to 200 samples per second
+  OCR1A = 8;//Traduced to 200 samples per second
 
   //COMPARE INTERRUPT ENABLE
   TIMSK1 |= (1 << OCIE1A);
@@ -315,7 +315,9 @@ ISR(INT0_vect) {
 
 ISR(TIMER1_COMPA_vect) {
 
+  cli();
   int16_t detectedPosition = encoderCounter;
+  sei();
 
   ring_buffer_put(&encoder_ring, &detectedPosition);
 
