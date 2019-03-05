@@ -132,7 +132,7 @@ void TestingConsole::parseLine(const QString &line)
             emit writeData(sendMessage);
 
             QString outputData;
-            for(int i = 0; i < numberOfValues; i ++){                
+            for(int i = 0; i < numberOfValues; i ++){
                 int num = extractedValues.at(i);
                 encoderPosition = num;
                 outputData.append((num >= 0)? "+":"-");
