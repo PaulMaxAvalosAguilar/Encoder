@@ -4,17 +4,15 @@ void go() {
   initEncoder();//Should go first
   initCommunication();//enables interruptions automatically
 
-
   while (1) {
 
     readAllSerial();
-
 
     //After CMD is read and handles found
     if (rn4020.allUUIDHandlesMatchesFound) {
       int16_t detectedPosition = 0;
       int recolectedEncoderValues = 0;
-      int16_t valuesBuff[8];
+      int16_t valuesBuff[10];
 
       uint16_t voltageResult = 0;
       int8_t batteryPercentage = 0;
@@ -22,8 +20,7 @@ void go() {
 
       //initiate Loop
       while (1) {
-
-
+        
         readAllSerial();
 
         //Writting a biger than characteristic size
@@ -34,17 +31,18 @@ void go() {
         if (getPositionValues(&detectedPosition) != -1) {
           valuesBuff[recolectedEncoderValues] = detectedPosition;
           recolectedEncoderValues++;
-          if (recolectedEncoderValues == 8) {
-
-            writeEightTwoBytesCharacteristic(ENCODER_VALUE,
-                                             valuesBuff[0],
-                                             valuesBuff[1],
-                                             valuesBuff[2],
-                                             valuesBuff[3],
-                                             valuesBuff[4],
-                                             valuesBuff[5],
-                                             valuesBuff[6],
-                                             valuesBuff[7]);
+          if (recolectedEncoderValues == 10) {
+            writeTenTwoBytesCharacteristic(ENCODER_VALUE,
+                                           valuesBuff[0],
+                                           valuesBuff[1],
+                                           valuesBuff[2],
+                                           valuesBuff[3],
+                                           valuesBuff[4],
+                                           valuesBuff[5],
+                                           valuesBuff[6],
+                                           valuesBuff[7],
+                                           valuesBuff[8],
+                                           valuesBuff[9]);
             recolectedEncoderValues = 0;
           }
         }
@@ -235,8 +233,7 @@ ISR(USART_UDRE_vect) {
 }
 
 //encoder Variables
-volatile int16_t encoderCounter = 0;
-volatile uint8_t continuityNumber = 0;
+volatile int16_t encoderCounter = 32768;
 
 #define ENCODER_BUFFER_LEN 16
 ring_t encoder_ring;
@@ -544,84 +541,24 @@ void setName( char *string) {
 
 void writeOneOneByteCharacteristic(int handle, int8_t value0) {
 
-  static uint8_t signValue = 0;
-  signValue = 0;
-
-  if (value0 < 0) signValue |= (1 << 0);
-
   runLockingCOMMAND(&privateHandles.
                     privateHandleNotifyActive[handle]
                     , "SHW,%04X,"
-                    "%02x"
-                    "%02X",
-                    privateHandles.privateHandle[handle],
-                    signValue,
-                    (value0 >= 0) ? value0 : -value0);
-}
-
-void writeOneTwoBytesCharacteristic(int handle, int16_t value0) {
-  static uint8_t signValue = 0;
-  signValue = 0;
-
-  if (value0 < 0) signValue |= (1 << 0);
-
-  runLockingCOMMAND(&privateHandles.
-                    privateHandleNotifyActive[handle]
-                    , "SHW,%04X,"
-                    "%02x"
                     "%04X",
                     privateHandles.privateHandle[handle],
-                    signValue,
-                    (value0 >= 0) ? value0 : -value0);
+                    value0);
 }
 
-void writeFourTwoBytesCharacteristic(int handle, int16_t value0,
-                                     int16_t value1, int16_t value2,
-                                     int16_t value3) {
-  static uint8_t signValue = 0;
-  signValue = 0;
-
-  if (value0 < 0) signValue |= (1 << 0);
-  if (value1 < 0) signValue |= (1 << 1);
-  if (value2 < 0) signValue |= (1 << 2);
-  if (value3 < 0) signValue |= (1 << 3);
-
-  runLockingCOMMAND(&privateHandles.
-                    privateHandleNotifyActive[handle]
-                    , "SHW,%04X,"
-                    "%02x"
-                    "%04X"
-                    "%04X"
-                    "%04X"
-                    "%04X",
-                    privateHandles.privateHandle[handle],
-                    signValue,
-                    (value0 >= 0) ? value0 : -value0,
-                    (value1 >= 0) ? value1 : -value1,
-                    (value2 >= 0) ? value2 : -value2,
-                    (value3 >= 0) ? value3 : -value3);
-}
-
-void writeEightTwoBytesCharacteristic(int handle, int16_t value0,
-                                      int16_t value1, int16_t value2,
-                                      int16_t value3, int16_t value4,
-                                      int16_t value5, int16_t value6,
-                                      int16_t value7) {
-  static uint8_t signValue = 0;
-  signValue = 0;
-
-  if (value0 < 0) signValue |= (1 << 0);
-  if (value1 < 0) signValue |= (1 << 1);
-  if (value2 < 0) signValue |= (1 << 2);
-  if (value3 < 0) signValue |= (1 << 3);
-  if (value4 < 0) signValue |= (1 << 4);
-  if (value5 < 0) signValue |= (1 << 5);
-  if (value6 < 0) signValue |= (1 << 6);
-  if (value7 < 0) signValue |= (1 << 7);
+void writeTenTwoBytesCharacteristic(int handle, int16_t value0,
+                                    int16_t value1, int16_t value2,
+                                    int16_t value3, int16_t value4,
+                                    int16_t value5, int16_t value6,
+                                    int16_t value7, int16_t value8,
+                                    int16_t value9) {
 
   runLockingCOMMAND(&privateHandles.privateHandleNotifyActive[handle],
                     "SHW,%04X,"
-                    "%02x"
+                    "%04x"
                     "%04X"
                     "%04X"
                     "%04X"
@@ -629,17 +566,20 @@ void writeEightTwoBytesCharacteristic(int handle, int16_t value0,
                     "%04X"
                     "%04X"
                     "%04X"
-                    "%04X\n",
+                    "%04X"
+                    "%04X",
                     privateHandles.privateHandle[handle],
-                    signValue,
-                    (value0 >= 0) ? value0 : -value0,
-                    (value1 >= 0) ? value1 : -value1,
-                    (value2 >= 0) ? value2 : -value2,
-                    (value3 >= 0) ? value3 : -value3,
-                    (value4 >= 0) ? value4 : -value4,
-                    (value5 >= 0) ? value5 : -value5,
-                    (value6 >= 0) ? value6 : -value6,
-                    (value7 >= 0) ? value7 : -value7);
+                    value0,
+                    value1,
+                    value2,
+                    value3,
+                    value4,
+                    value5,
+                    value6,
+                    value7,
+                    value8,
+                    value9
+                   );
 }
 
 void turnOffSubscription(int handle) {

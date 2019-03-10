@@ -4,8 +4,7 @@
 #include "ring.h"
 
 //encoder Variables
-volatile int16_t encoderCounter = 0;
-volatile uint8_t continuityNumber = 0;
+volatile int16_t encoderCounter = 32768;
 
 #define ENCODER_BUFFER_LEN 32
 ring_t encoder_ring;

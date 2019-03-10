@@ -171,31 +171,20 @@ Console *TestingConsole::getConsole()
 void TestingConsole::readNXBytesCharacteristic(const QString &line, int numberOfValues, std::deque<int> &numbers)
 {
     int valueBytesSize = 2;
+    uint16_t encoderStandardValue = 32768;
     auto encoderStringIterator = line.begin()+9;
 
-    QString hexSignsString = "";
-    uint signs = 0;
     QString dataStringValue = "";
     int value;
 
-    for(auto iterator = encoderStringIterator; iterator < encoderStringIterator + 2;
-        iterator++){
-        hexSignsString.append(*iterator);
-    }
-
-    signs = hexSignsString.toUInt(nullptr, 16);
-
-    encoderStringIterator += 2;
     for(int i = 0; i < numberOfValues; i ++){
-
-        uint8_t sign = ( signs & (1 << i));
 
         for(auto iterator = encoderStringIterator; iterator < encoderStringIterator + (valueBytesSize*2);
             iterator++){
             dataStringValue.append(*iterator);
         }
 
-        value = (sign)? -dataStringValue.toInt(nullptr, 16): dataStringValue.toInt(nullptr,16);
+        value = dataStringValue.toInt(nullptr,16) - 32768;
         qDebug()<< value;
 
         numbers.push_back(value);
