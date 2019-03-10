@@ -14,10 +14,6 @@ void go() {
       int recolectedEncoderValues = 0;
       int16_t valuesBuff[10];
 
-      uint16_t voltageResult = 0;
-      int8_t batteryPercentage = 0;
-      char percentBuff[3];
-
       //initiate Loop
       while (1) {
         
@@ -544,7 +540,7 @@ void writeOneOneByteCharacteristic(int handle, int8_t value0) {
   runLockingCOMMAND(&privateHandles.
                     privateHandleNotifyActive[handle]
                     , "SHW,%04X,"
-                    "%04X",
+                    "%04X\n",
                     privateHandles.privateHandle[handle],
                     value0);
 }
@@ -567,7 +563,7 @@ void writeTenTwoBytesCharacteristic(int handle, int16_t value0,
                     "%04X"
                     "%04X"
                     "%04X"
-                    "%04X",
+                    "%04X\n",
                     privateHandles.privateHandle[handle],
                     value0,
                     value1,

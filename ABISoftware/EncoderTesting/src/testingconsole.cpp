@@ -117,7 +117,7 @@ void TestingConsole::parseLine(const QString &line)
         emit writeData(sendMessage);
         if(line.contains("001B")){
 
-            const int numberOfValues = 8;
+            const int numberOfValues = 10;
 
             readNXBytesCharacteristic(line, numberOfValues, extractedValues);
 

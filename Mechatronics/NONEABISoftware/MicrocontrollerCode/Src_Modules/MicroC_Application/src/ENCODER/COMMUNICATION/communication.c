@@ -223,7 +223,7 @@ void writeOneOneByteCharacteristic(int handle, int8_t value0){
   runLockingCOMMAND(&privateHandles.
 		    privateHandleNotifyActive[handle]
 		    ,"SHW,%04X,"
-		    "%04X",
+		    "%04X\n",
 		    privateHandles.privateHandle[handle],
 		    value0);
 }
@@ -246,7 +246,7 @@ void writeTenTwoBytesCharacteristic(int handle, int16_t value0,
 		    "%04X"
 		    "%04X"
 		    "%04X"
-		    "%04X",
+		    "%04X\n",
 		    privateHandles.privateHandle[handle],
 		    value0,
 		    value1,
