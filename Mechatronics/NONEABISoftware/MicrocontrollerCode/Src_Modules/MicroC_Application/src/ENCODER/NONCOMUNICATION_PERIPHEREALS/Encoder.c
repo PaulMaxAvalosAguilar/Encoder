@@ -4,7 +4,7 @@
 #include "ring.h"
 
 //encoder Variables
-volatile int16_t encoderCounter = 32768;
+volatile uint16_t encoderCounter = 32768;
 
 #define ENCODER_BUFFER_LEN 32
 ring_t encoder_ring;
@@ -87,7 +87,7 @@ ISR(INT0_vect){
 
 ISR(TIMER1_COMPA_vect){
 
-  int16_t detectedPosition = encoderCounter;
+  uint16_t detectedPosition = encoderCounter;
   
   ring_buffer_put(&encoder_ring, &detectedPosition);
   
