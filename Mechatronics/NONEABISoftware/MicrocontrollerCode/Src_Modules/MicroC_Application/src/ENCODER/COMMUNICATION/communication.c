@@ -220,84 +220,24 @@ void setName( char *string){
 
 void writeOneOneByteCharacteristic(int handle, int8_t value0){
 
-  static uint8_t signValue = 0;
-  signValue = 0;
-
-  if(value0 < 0) signValue |= (1 << 0);
-
   runLockingCOMMAND(&privateHandles.
 		    privateHandleNotifyActive[handle]
 		    ,"SHW,%04X,"
-		    "%02x"
-		    "%02X",
-		    privateHandles.privateHandle[handle],
-		    signValue,
-		    (value0 >= 0)? value0: -value0);
-}
-
-void writeOneTwoBytesCharacteristic(int handle, int16_t value0){
-  static uint8_t signValue = 0;
-  signValue = 0;
-
-  if(value0 < 0) signValue |= (1 << 0);
-
-  runLockingCOMMAND(&privateHandles.
-		    privateHandleNotifyActive[handle]
-		    ,"SHW,%04X,"
-		    "%02x"
 		    "%04X",
 		    privateHandles.privateHandle[handle],
-		    signValue,
-		    (value0 >= 0)? value0: -value0);
+		    value0);
 }
 
-void writeFourTwoBytesCharacteristic(int handle, int16_t value0,
+void writeTenTwoBytesCharacteristic(int handle, int16_t value0,
 				    int16_t value1, int16_t value2,
-				    int16_t value3){
-  static uint8_t signValue = 0;
-  signValue = 0;
+				    int16_t value3, int16_t value4,
+				    int16_t value5, int16_t value6,
+				    int16_t value7, int16_t value8,
+				    int16_t value9){
   
-  if(value0 < 0) signValue |= (1 << 0);
-  if(value1 < 0) signValue |= (1 << 1);
-  if(value2 < 0) signValue |= (1 << 2);
-  if(value3 < 0) signValue |= (1 << 3);
-  
-  runLockingCOMMAND(&privateHandles.
-		    privateHandleNotifyActive[handle]
-		    ,"SHW,%04X,"
-		    "%02x"
-		    "%04X"
-		    "%04X"
-		    "%04X"
-		    "%04X",
-		    privateHandles.privateHandle[handle],
-		    signValue,
-		    (value0 >= 0)? value0: -value0,
-		    (value1 >= 0)? value1: -value1,
-		    (value2 >= 0)? value2: -value2,
-		    (value3 >= 0)? value3: -value3);
-}
-
-void writeEightTwoBytesCharacteristic(int handle, int16_t value0,
-				     int16_t value1, int16_t value2,
-				     int16_t value3, int16_t value4,
-				     int16_t value5, int16_t value6,
-				     int16_t value7){
-  static uint8_t signValue = 0;
-  signValue = 0;
-  
-  if(value0 < 0) signValue |= (1 << 0);
-  if(value1 < 0) signValue |= (1 << 1);
-  if(value2 < 0) signValue |= (1 << 2);
-  if(value3 < 0) signValue |= (1 << 3);
-  if(value4 < 0) signValue |= (1 << 4);
-  if(value5 < 0) signValue |= (1 << 5);
-  if(value6 < 0) signValue |= (1 << 6);
-  if(value7 < 0) signValue |= (1 << 7);
-    
   runLockingCOMMAND(&privateHandles.privateHandleNotifyActive[handle],
 		    "SHW,%04X,"
-		    "%02x"
+		    "%04x"
 		    "%04X"
 		    "%04X"
 		    "%04X"
@@ -305,17 +245,20 @@ void writeEightTwoBytesCharacteristic(int handle, int16_t value0,
 		    "%04X"
 		    "%04X"
 		    "%04X"
-		    "%04X\n",
+		    "%04X"
+		    "%04X",
 		    privateHandles.privateHandle[handle],
-		    signValue,
-		    (value0 >= 0)? value0: -value0,
-		    (value1 >= 0)? value1: -value1,
-		    (value2 >= 0)? value2: -value2,
-		    (value3 >= 0)? value3: -value3,
-		    (value4 >= 0)? value4: -value4,
-		    (value5 >= 0)? value5: -value5,
-		    (value6 >= 0)? value6: -value6,
-		    (value7 >= 0)? value7: -value7);
+		    value0,
+		    value1,
+		    value2,
+		    value3,
+		    value4,
+		    value5,
+		    value6,
+		    value7,
+		    value8,
+		    value9
+		    );
 }
 
 void turnOffSubscription(int handle){

@@ -215,7 +215,7 @@ void TestingConsole::updateEncoderWrtitingCounter()
     uint lectures = encoderTimesWritten-lastTimesCalled;
     int pulsesPerSecond = encoderPosition-lastEncoderPosition;
     double metersPerSecond =
-            pulsesPerSecond * (turnmm / pulses) *((double)1/1000);
+            pulsesPerSecond * (turnmm / (pulses*2)) *((double)1/1000);
 
 
     ui->lecturesvalLabel->setText(QString::number(lectures));

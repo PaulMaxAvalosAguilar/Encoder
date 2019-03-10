@@ -161,15 +161,12 @@ void setPrivateCharacteristic(char *service,
 			      uint8_t securityFlag);
 void setName(char *string);//No >  6 bytes when using private service
 void writeOneOneByteCharacteristic(int handle, int8_t value0);
-void writeOneTwoBytesCharacteristic(int handle, int16_t value0);
-void writeFourTwoBytesCharacteristic(int handle, int16_t value0,
-				int16_t value1, int16_t value2,
-				int16_t value3);
-void writeEightTwoBytesCharacteristic(int handle, int16_t value0,
-				     int16_t value1, int16_t value2,
-				     int16_t value3, int16_t value4,
-				     int16_t value5, int16_t value6,
-				     int16_t value7);
+void writeTenTwoBytesCharacteristic(int handle, int16_t value0,
+				    int16_t value1, int16_t value2,
+				    int16_t value3, int16_t value4,
+				    int16_t value5, int16_t value6,
+				    int16_t value7, int16_t value8,
+				    int16_t value9);
 void turnOffSubscription(int handle);
 
 //-------------- USART PARSING FUNCTIONS----------

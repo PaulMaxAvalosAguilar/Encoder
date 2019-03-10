@@ -1,5 +1,10 @@
 # Encoder2
 
+Connecting science and technology with sport
+
+If you want to achive change you must get power.Objectively know what you do, to control what you get, don't let things happen to you, make things happen.
+Be stronger at any weight.
+
 We understand that power is the only way to achieve change. Objectively know what you do, to control what you get. Be stronger at any weight
 
 Incremental Optical Encoder

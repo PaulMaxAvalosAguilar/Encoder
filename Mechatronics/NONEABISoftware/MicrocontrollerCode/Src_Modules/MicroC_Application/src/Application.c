@@ -7,8 +7,6 @@
 #include "BatteryManagement.h"
 #include "Encoder.h"
 
-
-
 int main(void) {
 
   initEncoder();//Should go first
@@ -24,7 +22,7 @@ int main(void) {
     if(rn4020.allUUIDHandlesMatchesFound){
       int16_t detectedPosition = 0;
       int recolectedEncoderValues = 0;
-      int16_t valuesBuff[8];
+      int16_t valuesBuff[10];
       
       uint16_t voltageResult = 0;
       int8_t batteryPercentage = 0;
@@ -49,16 +47,18 @@ int main(void) {
 	if(getPositionValues(&detectedPosition) != -1){
 	  valuesBuff[recolectedEncoderValues] = detectedPosition;
 	  recolectedEncoderValues++;	  
-	  if(recolectedEncoderValues == 8){
-	    writeEightTwoBytesCharacteristic(ENCODER_VALUE,
-					    valuesBuff[0],
-					    valuesBuff[1],
-					    valuesBuff[2],
-					    valuesBuff[3],
-					    valuesBuff[4],
-					    valuesBuff[5],
-					    valuesBuff[6],
-					    valuesBuff[7]);
+	  if(recolectedEncoderValues == 10){
+	    writeTenTwoBytesCharacteristic(ENCODER_VALUE,
+					   valuesBuff[0],
+					   valuesBuff[1],
+					   valuesBuff[2],
+					   valuesBuff[3],
+					   valuesBuff[4],
+					   valuesBuff[5],
+					   valuesBuff[6],
+					   valuesBuff[7],
+					   valuesBuff[8],
+					   valuesBuff[9]);
 	    recolectedEncoderValues = 0;
 	  }
 	  	  
