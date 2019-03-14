@@ -17,13 +17,14 @@ class TestingConsole : public QWidget
     Q_OBJECT
 
 public:
-    TestingConsole(QWidget *parent = 0, QSerialPort *port = nullptr);
+    TestingConsole(QWidget *parent = 0);
     ~TestingConsole();
     void parseLine(const QString &line);
     Console *getConsole();
 
 private:
-    void readNXBytesCharacteristic(const QString &line, int numberOfValues, std::deque<int> &numbers);
+    void readEncoder(const QString &line, std::deque<int> &numbers);
+    void calculateVelocity(int encoderPosition);
 
 signals:
     void writeData(const QByteArray &data);
@@ -33,14 +34,24 @@ public slots:
 
 private:
     Ui::TestingConsole *ui;
-    QSerialPort *m_serial = nullptr;
+
     QTimer *m_timer;
+
+    //encodingFormat
+    const uint encNumberofValues;
+    const uint encByteSize;
+    const double encmeasuringRate;
+
+    //physical dimensions
+    const uint discToothNumber;
+    const uint discChangingStatesNumber;
+    const double discPerimeter;
+
+    //read characteristics
     uint encoderTimesWritten;
     int encoderPosition;
-    uint discToothNumber;
-    double discPerimeter;
-
     std::deque<int> extractedValues;
+
 };
 
 #endif // TESTINGCONSOLE_H

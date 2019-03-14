@@ -62,7 +62,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     m_ui(new Ui::MainWindow),
     m_status(new QLabel(this)),
-    m_testConsole(new TestingConsole(this, m_serial)),
+    m_testConsole(new TestingConsole(this)),
     m_console(m_testConsole->getConsole()),
     m_settings(new SettingsDialog(this)),
     m_serial(new QSerialPort(this))

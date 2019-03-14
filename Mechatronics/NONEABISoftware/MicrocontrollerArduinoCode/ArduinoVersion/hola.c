@@ -10,13 +10,13 @@ void go() {
 
     //After CMD is read and handles found
     if (rn4020.allUUIDHandlesMatchesFound) {
-      int16_t detectedPosition = 0;
+      uint16_t detectedPosition = 0;
       int recolectedEncoderValues = 0;
-      int16_t valuesBuff[10];
+      uint16_t valuesBuff[10];
 
       //initiate Loop
       while (1) {
-        
+
         readAllSerial();
 
         //Writting a biger than characteristic size
@@ -28,6 +28,30 @@ void go() {
           valuesBuff[recolectedEncoderValues] = detectedPosition;
           recolectedEncoderValues++;
           if (recolectedEncoderValues == 10) {
+              printf("SHW,001B,"
+                    "%04x"
+                    "%04X"
+                    "%04X"
+                    "%04X"
+                    "%04X"
+                    "%04X"
+                    "%04X"
+                    "%04X"
+                    "%04X"
+                    "%04X\n",
+                    valuesBuff[0],
+                    valuesBuff[1],
+                    valuesBuff[2],
+                    valuesBuff[3],
+                    valuesBuff[4],
+                    valuesBuff[5],
+                    valuesBuff[6],
+                    valuesBuff[7],
+                    valuesBuff[8],
+                    valuesBuff[9]
+                   );
+            
+            /*
             writeTenTwoBytesCharacteristic(ENCODER_VALUE,
                                            valuesBuff[0],
                                            valuesBuff[1],
@@ -39,7 +63,8 @@ void go() {
                                            valuesBuff[7],
                                            valuesBuff[8],
                                            valuesBuff[9]);
-            recolectedEncoderValues = 0;
+                                           */
+            recolectedEncoderValues = 0;          
           }
         }
       }
@@ -233,7 +258,7 @@ volatile uint16_t encoderCounter = 32768;
 
 #define ENCODER_BUFFER_LEN 16
 ring_t encoder_ring;
-int16_t encoder_buffer[ENCODER_BUFFER_LEN];
+uint16_t encoder_buffer[ENCODER_BUFFER_LEN];
 
 #if ((ENCODER_BUFFER_LEN - 1) & ENCODER_BUFFER_LEN) == 0
 # if ENCODER_BUFFER_LEN > 256
@@ -280,14 +305,14 @@ void timer1Config(void) {
   //INITIAL AND COMPARE VALUE
   TCNT1 = 0;
   //Counter top = (T x Fcpu / N) - 1
-  //Counter top = (.005"*20000000/8)-1
+  //Counter top = (.005"*16000000/8)-1
   OCR1A = 9999;//Traduced to 200 samples per second
 
   //COMPARE INTERRUPT ENABLE
   TIMSK1 |= (1 << OCIE1A);
 }
 
-int8_t getPositionValues(int16_t *integer) {
+int8_t getPositionValues(uint16_t *integer) {
 
   return ring_buffer_get(&encoder_ring, integer);
 }
@@ -316,8 +341,10 @@ ISR(INT0_vect) {
 
 
 
-ISR(TIMER1_COMPA_vect) {
+ISR(TIMER1_COMPA_vect) {  
+  cli();
   uint16_t detectedPosition = encoderCounter;
+sei();
 
   ring_buffer_put(&encoder_ring, &detectedPosition);
 
@@ -535,7 +562,7 @@ void setName( char *string) {
   runLockingCOMMAND(NULL, "SN,%s\n", string);
 }
 
-void writeOneOneByteCharacteristic(int handle, int8_t value0) {
+void writeOneOneByteCharacteristic(unsigned int handle, uint8_t value0) {
 
   runLockingCOMMAND(&privateHandles.
                     privateHandleNotifyActive[handle]
@@ -545,12 +572,12 @@ void writeOneOneByteCharacteristic(int handle, int8_t value0) {
                     value0);
 }
 
-void writeTenTwoBytesCharacteristic(int handle, int16_t value0,
-                                    int16_t value1, int16_t value2,
-                                    int16_t value3, int16_t value4,
-                                    int16_t value5, int16_t value6,
-                                    int16_t value7, int16_t value8,
-                                    int16_t value9) {
+void writeTenTwoBytesCharacteristic(unsigned int handle, uint16_t value0,
+                                    uint16_t value1, uint16_t value2,
+                                    uint16_t value3, uint16_t value4,
+                                    uint16_t value5, uint16_t value6,
+                                    uint16_t value7, uint16_t value8,
+                                    uint16_t value9) {
 
   runLockingCOMMAND(&privateHandles.privateHandleNotifyActive[handle],
                     "SHW,%04X,"

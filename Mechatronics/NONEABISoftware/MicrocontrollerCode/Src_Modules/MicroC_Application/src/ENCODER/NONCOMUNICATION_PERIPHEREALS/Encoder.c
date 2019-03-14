@@ -8,7 +8,7 @@ volatile uint16_t encoderCounter = 32768;
 
 #define ENCODER_BUFFER_LEN 32
 ring_t encoder_ring;
-int16_t encoder_buffer[ENCODER_BUFFER_LEN];
+uint16_t encoder_buffer[ENCODER_BUFFER_LEN];
 
 #if ((ENCODER_BUFFER_LEN - 1) & ENCODER_BUFFER_LEN) == 0
 # if ENCODER_BUFFER_LEN > 256
@@ -58,7 +58,7 @@ void timer1Config(void){
   TIMSK1 |= (1 << OCIE1A);
 }
 
-int8_t getPositionValues(int16_t *integer){
+int8_t getPositionValues(uint16_t *integer){
 
  return ring_buffer_get(&encoder_ring, integer);
 }

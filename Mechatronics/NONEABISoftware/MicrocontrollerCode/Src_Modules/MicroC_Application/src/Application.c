@@ -20,7 +20,7 @@ int main(void) {
 
     //After CMD is read and handles found
     if(rn4020.allUUIDHandlesMatchesFound){
-      int16_t detectedPosition = 0;
+      uint16_t detectedPosition = 0;
       int recolectedEncoderValues = 0;
       int16_t valuesBuff[10];
       

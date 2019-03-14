@@ -218,7 +218,7 @@ void setName( char *string){
   runLockingCOMMAND(NULL,"SN,%s\n", string);
 }
 
-void writeOneOneByteCharacteristic(int handle, int8_t value0){
+void writeOneOneByteCharacteristic(unsigned int handle, uint8_t value0){
 
   runLockingCOMMAND(&privateHandles.
 		    privateHandleNotifyActive[handle]
@@ -228,12 +228,12 @@ void writeOneOneByteCharacteristic(int handle, int8_t value0){
 		    value0);
 }
 
-void writeTenTwoBytesCharacteristic(int handle, int16_t value0,
-				    int16_t value1, int16_t value2,
-				    int16_t value3, int16_t value4,
-				    int16_t value5, int16_t value6,
-				    int16_t value7, int16_t value8,
-				    int16_t value9){
+void writeTenTwoBytesCharacteristic(unsigned int handle, uint16_t value0,
+				    uint16_t value1, uint16_t value2,
+				    uint16_t value3, uint16_t value4,
+				    uint16_t value5, uint16_t value6,
+				    uint16_t value7, uint16_t value8,
+				    uint16_t value9){
   
   runLockingCOMMAND(&privateHandles.privateHandleNotifyActive[handle],
 		    "SHW,%04X,"

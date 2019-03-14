@@ -4,27 +4,28 @@
 #include <QDebug>
 #include <iostream>
 
-TestingConsole::TestingConsole(QWidget *parent, QSerialPort *port) :
+TestingConsole::TestingConsole(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::TestingConsole),
-    m_serial(port),
     m_timer(new QTimer(this)),
+    encNumberofValues(10),
+    encByteSize(2),
+    encmeasuringRate(1),
+    discToothNumber(10),
+    discChangingStatesNumber(discToothNumber*2),
+    discPerimeter(.120),
     encoderTimesWritten(0),
     encoderPosition(0),
     extractedValues()
 {
     ui->setupUi(this);
-
-    discToothNumber = 10;
-    discPerimeter = 120;
-
     QString physicalPropertiesText;
 
     physicalPropertiesText+= "Tooth number: ";
     physicalPropertiesText+= QString::number(discToothNumber);
     ui->toothLabel->setText(physicalPropertiesText);
 
-    physicalPropertiesText = "Turn(mm): ";
+    physicalPropertiesText = "Turn(m): ";
     physicalPropertiesText += QString::number(discPerimeter);
     ui->turnmmLabel->setText(physicalPropertiesText);
 
@@ -117,9 +118,7 @@ void TestingConsole::parseLine(const QString &line)
         emit writeData(sendMessage);
         if(line.contains("001B")){
 
-            const int numberOfValues = 10;
-
-            readNXBytesCharacteristic(line, numberOfValues, extractedValues);
+            readEncoder(line, extractedValues);
 
             static int firstTimeTimer = 1;
             if(firstTimeTimer == 1){
@@ -132,7 +131,7 @@ void TestingConsole::parseLine(const QString &line)
             emit writeData(sendMessage);
 
             QString outputData;
-            for(int i = 0; i < numberOfValues; i ++){
+            for(uint i = 0; i < encNumberofValues; i ++){
                 int num = extractedValues.at(i);
                 encoderPosition = num;
                 outputData.append((num >= 0)? "+":"-");
@@ -168,14 +167,15 @@ Console *TestingConsole::getConsole()
     return ui->m_console;
 }
 
-void TestingConsole::readNXBytesCharacteristic(const QString &line, int numberOfValues, std::deque<int> &numbers)
+void TestingConsole::readEncoder(const QString &line, std::deque<int> &numbers)
 {
-    int valueBytesSize = 2;
-    uint16_t encoderStandardValue = 32768;
+    const int numberOfValues = 10;
+    const int valueBytesSize = 2;
+    const uint16_t encoderStandardValue = 32768;
     auto encoderStringIterator = line.begin()+9;
 
     QString dataStringValue = "";
-    int value;
+    int encoderPosition = 0;
 
     for(int i = 0; i < numberOfValues; i ++){
 
@@ -184,32 +184,67 @@ void TestingConsole::readNXBytesCharacteristic(const QString &line, int numberOf
             dataStringValue.append(*iterator);
         }
 
-        value = dataStringValue.toInt(nullptr,16) - 32768;
-        qDebug()<< value;
+        encoderPosition = dataStringValue.toInt(nullptr,16) - encoderStandardValue;
 
-        numbers.push_back(value);
+        calculateVelocity(encoderPosition);
+        numbers.push_back(encoderPosition);
 
         encoderStringIterator += (valueBytesSize*2);
         dataStringValue.clear();
     }
 }
 
+void TestingConsole::calculateVelocity(int encoderPosition)
+{
+    //tracking variables
+    static int lastEncoderPosition = 0;
+    static double lastVelocity = 0;
+    static int timeCount = 0;
+
+    //calculated variables
+    static int traveledPulses = 0;
+    static double velocity = 0;
+
+    timeCount++;
+    if(timeCount == 200){
+        timeCount = 0;
+
+        traveledPulses = encoderPosition - lastEncoderPosition;
+        velocity = ((traveledPulses) * (discPerimeter/ (discChangingStatesNumber)))/encmeasuringRate;
+        qDebug() << encoderPosition << "traveledPulses:" << traveledPulses <<" Velocity:"<<velocity
+                 << " AvgVelocity:"<< (lastVelocity + velocity)/2;
+
+        //Assigned tracking variables
+        lastVelocity = velocity;
+        lastEncoderPosition = encoderPosition;
+
+    }
+
+
+
+
+}
+
 void TestingConsole::updateEncoderWrtitingCounter()
 {
-    static int lastTimesCalled = 0;
+    //tracking variables
+    static int lastTimesCalled = 0;    
     static int lastEncoderPosition = 0;
-    static int pulses = discToothNumber;
-    static double turnmm = discPerimeter;
+
+    //calculated variables
+    static int traveledPulses = 0;
+    static double velocity = 0;
 
     uint lectures = encoderTimesWritten-lastTimesCalled;
-    int pulsesPerSecond = encoderPosition-lastEncoderPosition;
-    double metersPerSecond =
-            pulsesPerSecond * (turnmm / (pulses*2)) *((double)1/1000);
+    traveledPulses = encoderPosition - lastEncoderPosition;
+    velocity = traveledPulses * (discPerimeter / discChangingStatesNumber);
 
 
     ui->lecturesvalLabel->setText(QString::number(lectures));
-    ui->pulsvalLabel->setText(QString::number(qFabs(pulsesPerSecond)));
-    ui->metersvalLabel->setText(QString::number(metersPerSecond));
+    ui->pulsvalLabel->setText(QString::number(qFabs(traveledPulses)));
+    ui->metersvalLabel->setText(QString::number(velocity));
+
+    //Assigned tracking variables
     lastTimesCalled = encoderTimesWritten;
     lastEncoderPosition = encoderPosition;
     m_timer->start(1000);
