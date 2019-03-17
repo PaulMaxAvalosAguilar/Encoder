@@ -23,6 +23,9 @@ directories:
 
 	@mkdir -p $(SRC_MODULES_DIR)/$(MAINMODULE)/$(SRCDIR)
 
+size:
+	$(SIZE) $(TARGETDIRECTORY)/$(VERSION)/$(TARGET).$(ELFEXT)
+
 Application: 
 
 	@for module in $(DEPMODULES); do\
