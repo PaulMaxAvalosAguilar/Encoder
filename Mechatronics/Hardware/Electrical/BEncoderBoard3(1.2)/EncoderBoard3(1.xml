@@ -2,7 +2,7 @@
 <export version="D">
   <design>
     <source>D:\pauld\Programming\NN54\Mechatronics\Hardware\Electrical\BEncoderBoard3(1.2)\EncoderBoard3(1.2).sch</source>
-    <date>9/2/2022 11:55:19 AM</date>
+    <date>2/25/2023 7:09:54 PM</date>
     <tool>Eeschema (5.1.6)-1</tool>
     <sheet number="1" name="/" tstamps="/">
       <title_block>
@@ -430,7 +430,7 @@
       <tstamp>5F0365A7</tstamp>
     </comp>
     <comp ref="R10">
-      <value>5.1k</value>
+      <value>5.1K</value>
       <footprint>Encoder:R_0603_1608Metric_Pad1.05x0.95mm_HandSolder</footprint>
       <datasheet>~</datasheet>
       <libsource lib="Device" part="R" description="Resistor"/>

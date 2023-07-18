@@ -1,0 +1,15 @@
+{
+  "C_Cpp.errorSquiggles": "disabled",
+  "explorer.compactFolders": false,
+  "files.associations": {
+    "controllertask.h": "c",
+    "lcd.h": "c",
+    "stm32g431xx.h": "c",
+    "configurations.h": "c",
+    "periphereals.h": "c",
+    "freertos.h": "c",
+    "deps.h": "c",
+    "masters.h": "c",
+    "drivers.h": "c"
+  }
+}

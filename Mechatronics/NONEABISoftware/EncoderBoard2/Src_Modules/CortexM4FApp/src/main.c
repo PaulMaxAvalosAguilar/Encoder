@@ -24,12 +24,15 @@ TaskHandle_t adcFreeTaskHandle = NULL;
 TaskHandle_t adcWaitTaskHandle = NULL;
 
 //Internal functions-------------------------
+
 void encoderTask(void *args);
 void uartRXTask(void *args);
 void uartTXTask(void *args);
 void lcdTask(void *args);
+
 void adcFreeTask(void *args);
 void adcWaitTask(void *args);
+
 
 void TIM2_IRQHandler(void);
 void TIM3_IRQHandler(void);
@@ -114,12 +117,17 @@ static inline uint32_t readADC(void){
   uint32_t adcData;
   
   taskENTER_CRITICAL();
+  //TODO: ENABLE ADC here
+
+  //Set ADC to 12 bits before adstart  
+  //TODO: Set cont to 0
+  
   ADC1->CFGR2 |= ADC_CFGR2_BULB;//Bulb sampling
   ADC1->CFGR2 |= (ADC1->CFGR2 & (~ADC_CFGR2_OVSS)) | (0b1000 << ADC_CFGR2_OVSS_Pos);//Shift 8 bits
   ADC1->CFGR2 |= (ADC1->CFGR2 & (~ADC_CFGR2_OVSR)) | (0b111 << ADC_CFGR2_OVSR_Pos);//Oversampling ratio 256x
   ADC1->CFGR2 &= ~ADC_CFGR2_ROVSE;//Regular oversampling disabled
 
-  ADC1->SQR1 = (ADC1->SQR1 & ~(ADC_SQR1_L)) | (0b0000 << ADC_SQR1_L_Pos);//1 conversion
+  ADC1->SQR1 = (ADC1->SQR1 & ~(ADC_SQR1_L)) | (0b0000 << ADC_SQR1_L_Pos);//Sequence length of 1 for single channel conversion
   ADC1->SQR1 = (ADC1->SQR1 & ~(ADC_SQR1_SQ1)) | (18 << ADC_SQR1_SQ1_Pos);//1st conversion on IN18
   ADC1->SMPR2 = (ADC1->SMPR2 & (~ADC_SMPR2_SMP18)) | (0b000 << ADC_SMPR2_SMP18_Pos);//Sample time 2.5 clock cycles
     
@@ -127,6 +135,8 @@ static inline uint32_t readADC(void){
   while(!(ADC1->ISR & ADC_ISR_EOC));//Wait till conversion finished
   adcData = ADC1->DR;//Read data register and clear EOC flag
   while(ADC1->CR & ADC_CR_ADSTART);
+
+  //TODO: clear EOS end of sequence
 
   ADC1->CFGR2 |= ADC_CFGR2_ROVSE;//Regular oversampling enabled
     
@@ -161,7 +171,7 @@ static inline uint16_t decodeTwoBytes(uint8_t msb, uint8_t lsb){
 }
 
 
-static void encoderTask(void *args __attribute__((unused))){
+void encoderTask(void *args __attribute__((unused))){
 
   encoderTaskParamTypes_t receivedData;
   receivedData = *(encoderTaskParamTypes_t *)args;
@@ -178,7 +188,7 @@ static void encoderTask(void *args __attribute__((unused))){
   }
 }
 
-static void uartRXTask(void *args __attribute__((unused))){
+void uartRXTask(void *args __attribute__((unused))){
 
   encoderTaskParamTypes_t dataToSend;
   uint32_t receiveBufferPos = 0;
@@ -270,7 +280,7 @@ static void uartRXTask(void *args __attribute__((unused))){
   }
 }
 
-static void uartTXTask(void *args __attribute__((unused))){
+void uartTXTask(void *args __attribute__((unused))){
 
   uartTXData_t receivedData;
   char buffer[20];
@@ -322,7 +332,7 @@ static void uartTXTask(void *args __attribute__((unused))){
   }
 }
 
-static void lcdTask(void *args __attribute__((unused))){
+void lcdTask(void *args __attribute__((unused))){
 
   lcdData_t receivedData;
   char buffer[22];
@@ -374,7 +384,7 @@ static void lcdTask(void *args __attribute__((unused))){
 }
 
 
-static void adcFreeTask(void *args __attribute__((unused))){
+void adcFreeTask(void *args __attribute__((unused))){
   
   uint32_t adcData = 0;
 
@@ -388,7 +398,7 @@ static void adcFreeTask(void *args __attribute__((unused))){
   }
 }
 
-static void adcWaitTask(void *args __attribute__((unused))){
+void adcWaitTask(void *args __attribute__((unused))){
   uint32_t adcData = 0;
   
   for(;;){
@@ -450,8 +460,7 @@ int main(void)
   //RCC_CR All clocks off and not ready(hsi*), HSE not bypassed
   //RCC_CFGR HSI16 selected as system clock, sysclk & PCLK1 & PCLK2 not divided, MCO output disabled 
   //RCC_PLLCFGR PLLn mult by 8, PLLm div by 1, no PLL sourcce, PLLR div by 2, PLLR disabled    
-
-
+  
   //Wait states for less than 90 MHz at VCore Range 1 normal mode
   FLASH->ACR |= FLASH_ACR_PRFTEN;
   FLASH->ACR = (FLASH->ACR & (~FLASH_ACR_LATENCY)) | FLASH_ACR_LATENCY_1WS; //1 wait states
@@ -545,7 +554,7 @@ int main(void)
   GPIOB->MODER = (GPIOB->MODER & (~GPIO_MODER_MODE7)) | (0b10 << GPIO_MODER_MODE7_Pos) ; //Alternate function mode
   GPIOB->OTYPER &= (~GPIO_OTYPER_OT7);//Push pull  
   GPIOB->OSPEEDR = (GPIOB->OSPEEDR & (~GPIO_OSPEEDR_OSPEED7)) | (0b00 << GPIO_OSPEEDR_OSPEED7_Pos); //Low speed
-  GPIOB->PUPDR = (GPIOB->PUPJDR & (~GPIO_PUPDR_PUPD7)) | (0b00 << GPIO_PUPDR_PUPD7_Pos); //No pull up, no pull down
+  GPIOB->PUPDR = (GPIOB->PUPDR & (~GPIO_PUPDR_PUPD7)) | (0b00 << GPIO_PUPDR_PUPD7_Pos); //No pull up, no pull down
   GPIOB->AFR[0] = (GPIOB->AFR[0] & (~GPIO_AFRL_AFSEL7)) | (11 << GPIO_AFRL_AFSEL7_Pos); //Alternate function 11
 
 

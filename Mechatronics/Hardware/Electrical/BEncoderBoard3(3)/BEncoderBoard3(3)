@@ -1,0 +1,22 @@
+"Source:","D:\pauld\Programming\NN54\Mechatronics\Hardware\Electrical\BEncoderBoard3(3)\BEncoderBoard3(3).sch"
+"Date:","2/25/2023 8:46:31 PM"
+"Tool:","Eeschema (5.1.6)-1"
+"Generator:","D:\Program_Files\KiCad\bin\scripting\plugins/bom_csv_grouped_by_value.py"
+"Component Count:","4"
+
+"Individual Components:"
+
+"Item","Qty","Reference(s)","Value","LibPart","Footprint","Datasheet"
+"","","C16","100nF","Device:C","Encoder:C_0603_1608Metric_Pad1.05x0.95mm_HandSolder","~"
+"","","C17","100nF","Device:C","Encoder:C_0603_1608Metric_Pad1.05x0.95mm_HandSolder","~"
+"","","J1","Conn_01x06_Male","Connector:Conn_01x06_Male","Encoder:SolderWirePad_1x06_SMD_5x10mm","~"
+"","","U8","LSM6DSRX","Encoder:LSM6DSRX","Encoder:LSM6DSRX",""
+
+
+
+"Collated Components:"
+
+"Item","Qty","Reference(s)","Value","LibPart","Footprint","Datasheet"
+"1","2","C16, C17","100nF","Device:C","Encoder:C_0603_1608Metric_Pad1.05x0.95mm_HandSolder","~"
+"2","1","J1","Conn_01x06_Male","Connector:Conn_01x06_Male","Encoder:SolderWirePad_1x06_SMD_5x10mm","~"
+"3","1","U8","LSM6DSRX","Encoder:LSM6DSRX","Encoder:LSM6DSRX",""

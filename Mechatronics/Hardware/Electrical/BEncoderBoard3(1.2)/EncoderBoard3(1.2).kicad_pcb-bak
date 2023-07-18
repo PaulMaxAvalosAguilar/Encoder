@@ -965,7 +965,7 @@
     (tags "Integrated Circuit")
     (path /5F11DB77/5F0365A7)
     (attr smd)
-    (fp_text reference U6 (at 0.6985 -2.2225 90) (layer F.SilkS)
+    (fp_text reference U6 (at -0.0635 2.413 90) (layer F.SilkS)
       (effects (font (size 0.8128 0.6096) (thickness 0.1524)))
     )
     (fp_text value DMosfet (at 0 0 90) (layer F.SilkS) hide
@@ -1246,7 +1246,7 @@
     (tags "Integrated Circuit")
     (path /5F11DB77/5F2EE54D)
     (attr smd)
-    (fp_text reference U5 (at 2.774 1.27 90) (layer F.SilkS)
+    (fp_text reference U5 (at -0.0835 2.413 90) (layer F.SilkS)
       (effects (font (size 0.8128 0.6096) (thickness 0.1524)))
     )
     (fp_text value DW01+G (at 0 0 90) (layer F.SilkS) hide
@@ -1955,7 +1955,7 @@
     (descr "JST EH series connector, B3B-EH-A (http://www.jst-mfg.com/product/pdf/eng/eEH.pdf), generated with kicad-footprint-generator")
     (tags "connector JST EH vertical")
     (path /5F11DB77/607E30C2)
-    (fp_text reference J7 (at -1.31064 -2.30124 90) (layer F.SilkS)
+    (fp_text reference J7 (at -2.3114 3.556 90) (layer F.SilkS)
       (effects (font (size 0.8128 0.6096) (thickness 0.1524)))
     )
     (fp_text value Conn_01x03_Male (at 2.5 3.4 90) (layer F.Fab)

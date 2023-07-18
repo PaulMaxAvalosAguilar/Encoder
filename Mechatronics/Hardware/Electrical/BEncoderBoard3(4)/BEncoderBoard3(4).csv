@@ -1,0 +1,30 @@
+"Source:","D:\pauld\Programming\NN54\Mechatronics\Hardware\Electrical\BEncoderBoard3(4)\BEncoderBoard3(4).sch"
+"Date:","2/25/2023 9:40:37 PM"
+"Tool:","Eeschema (5.1.6)-1"
+"Generator:","D:\Program_Files\KiCad\bin\scripting\plugins/bom_csv_grouped_by_value.py"
+"Component Count:","8"
+
+"Individual Components:"
+
+"Item","Qty","Reference(s)","Value","LibPart","Footprint","Datasheet"
+"","","AE1","Antenna","Encoder:Antenna","Encoder:Antenna",""
+"","","C18","C_Rf","Device:C","Encoder:C_0402_1005Metric","~"
+"","","C19","C_Rf","Device:C","Encoder:C_0402_1005Metric","~"
+"","","C20","10uF","Device:C","Encoder:C_0603_1608Metric_Pad1.05x0.95mm_HandSolder","~"
+"","","C21","1uF","Device:C","Encoder:C_0603_1608Metric_Pad1.05x0.95mm_HandSolder","~"
+"","","J1","Conn_01x04_Male","Connector:Conn_01x04_Male","Encoder:SolderWirePad_1x04_SMD_5x10mm_copy","~"
+"","","R17","L_Rf","Device:L_Small","Encoder:L_0402_1005Metric","~"
+"","","U8","RN4871U","Encoder:RN4871U","Encoder:RN4871U",""
+
+
+
+"Collated Components:"
+
+"Item","Qty","Reference(s)","Value","LibPart","Footprint","Datasheet"
+"1","1","AE1","Antenna","Encoder:Antenna","Encoder:Antenna",""
+"2","2","C18, C19","C_Rf","Device:C","Encoder:C_0402_1005Metric","~"
+"3","1","C20","10uF","Device:C","Encoder:C_0603_1608Metric_Pad1.05x0.95mm_HandSolder","~"
+"4","1","C21","1uF","Device:C","Encoder:C_0603_1608Metric_Pad1.05x0.95mm_HandSolder","~"
+"5","1","J1","Conn_01x04_Male","Connector:Conn_01x04_Male","Encoder:SolderWirePad_1x04_SMD_5x10mm_copy","~"
+"6","1","R17","L_Rf","Device:L_Small","Encoder:L_0402_1005Metric","~"
+"7","1","U8","RN4871U","Encoder:RN4871U","Encoder:RN4871U",""

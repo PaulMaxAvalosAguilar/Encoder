@@ -59,7 +59,7 @@ void sendToUARTTXQueue(messageTypes_t messageType,
 		       uint16_t traveledDistanceOrADC,
 		       uint16_t meanPropulsiveVelocity,
 		       uint16_t peakVelocity);
-ovoid sendToLCDQueue(messageTypes_t messageType,
+void sendToLCDQueue(messageTypes_t messageType,
 		    uint32_t displayValue);
 void printStringUART(const char myString[]);
 

@@ -2,7 +2,7 @@
 <export version="D">
   <design>
     <source>D:\pauld\Programming\NN54\Mechatronics\Hardware\Electrical\BEncoderBoard3(3)\BEncoderBoard3(3).sch</source>
-    <date>9/2/2022 4:20:58 PM</date>
+    <date>2/25/2023 8:46:31 PM</date>
     <tool>Eeschema (5.1.6)-1</tool>
     <sheet number="1" name="/" tstamps="/">
       <title_block>
@@ -19,7 +19,7 @@
     </sheet>
   </design>
   <components>
-    <comp ref="U9">
+    <comp ref="U8">
       <value>LSM6DSRX</value>
       <footprint>Encoder:LSM6DSRX</footprint>
       <libsource lib="Encoder" part="LSM6DSRX" description=""/>
@@ -34,7 +34,7 @@
       <sheetpath names="/" tstamps="/"/>
       <tstamp>60714845</tstamp>
     </comp>
-    <comp ref="C12">
+    <comp ref="C16">
       <value>100nF</value>
       <footprint>Encoder:C_0603_1608Metric_Pad1.05x0.95mm_HandSolder</footprint>
       <datasheet>~</datasheet>
@@ -42,7 +42,7 @@
       <sheetpath names="/" tstamps="/"/>
       <tstamp>60719ECD</tstamp>
     </comp>
-    <comp ref="C13">
+    <comp ref="C17">
       <value>100nF</value>
       <footprint>Encoder:C_0603_1608Metric_Pad1.05x0.95mm_HandSolder</footprint>
       <datasheet>~</datasheet>
@@ -123,47 +123,47 @@
   <nets>
     <net code="1" name="/SCL">
       <node ref="J1" pin="2"/>
-      <node ref="U9" pin="13"/>
+      <node ref="U8" pin="13"/>
     </net>
     <net code="2" name="+3V3">
-      <node ref="C13" pin="2"/>
-      <node ref="C12" pin="2"/>
-      <node ref="U9" pin="8"/>
-      <node ref="U9" pin="5"/>
+      <node ref="C17" pin="2"/>
+      <node ref="C16" pin="2"/>
+      <node ref="U8" pin="8"/>
+      <node ref="U8" pin="5"/>
       <node ref="J1" pin="6"/>
     </net>
     <net code="3" name="/SDO">
       <node ref="J1" pin="4"/>
-      <node ref="U9" pin="1"/>
+      <node ref="U8" pin="1"/>
     </net>
     <net code="4" name="/SDA">
-      <node ref="U9" pin="14"/>
+      <node ref="U8" pin="14"/>
       <node ref="J1" pin="3"/>
     </net>
     <net code="5" name="GND">
       <node ref="J1" pin="5"/>
-      <node ref="U9" pin="7"/>
-      <node ref="U9" pin="3"/>
-      <node ref="U9" pin="2"/>
-      <node ref="C13" pin="1"/>
-      <node ref="C12" pin="1"/>
-      <node ref="U9" pin="6"/>
+      <node ref="U8" pin="7"/>
+      <node ref="U8" pin="3"/>
+      <node ref="U8" pin="2"/>
+      <node ref="C17" pin="1"/>
+      <node ref="C16" pin="1"/>
+      <node ref="U8" pin="6"/>
     </net>
-    <net code="6" name="Net-(U9-Pad9)">
-      <node ref="U9" pin="9"/>
+    <net code="6" name="Net-(U8-Pad9)">
+      <node ref="U8" pin="9"/>
     </net>
-    <net code="7" name="Net-(U9-Pad4)">
-      <node ref="U9" pin="4"/>
+    <net code="7" name="Net-(U8-Pad4)">
+      <node ref="U8" pin="4"/>
     </net>
-    <net code="8" name="Net-(U9-Pad11)">
-      <node ref="U9" pin="11"/>
+    <net code="8" name="Net-(U8-Pad11)">
+      <node ref="U8" pin="11"/>
     </net>
-    <net code="9" name="Net-(U9-Pad10)">
-      <node ref="U9" pin="10"/>
+    <net code="9" name="Net-(U8-Pad10)">
+      <node ref="U8" pin="10"/>
     </net>
     <net code="10" name="/CS">
       <node ref="J1" pin="1"/>
-      <node ref="U9" pin="12"/>
+      <node ref="U8" pin="12"/>
     </net>
   </nets>
 </export>

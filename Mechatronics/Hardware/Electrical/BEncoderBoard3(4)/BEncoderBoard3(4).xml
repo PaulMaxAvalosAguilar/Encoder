@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <export version="D">
   <design>
-    <source>D:\pauld\Programming\NN54\Mechatronics\Hardware\Electrical\BEncoderBoard3(RN4871u)\BEncoderBoard3(RN4871u).sch</source>
-    <date>4/14/2021 1:36:23 PM</date>
+    <source>D:\pauld\Programming\NN54\Mechatronics\Hardware\Electrical\BEncoderBoard3(4)\BEncoderBoard3(4).sch</source>
+    <date>2/25/2023 9:40:37 PM</date>
     <tool>Eeschema (5.1.6)-1</tool>
     <sheet number="1" name="/" tstamps="/">
       <title_block>
@@ -10,7 +10,7 @@
         <company/>
         <rev/>
         <date/>
-        <source>BEncoderBoard3(RN4871u).sch</source>
+        <source>BEncoderBoard3(4).sch</source>
         <comment number="1" value=""/>
         <comment number="2" value=""/>
         <comment number="3" value=""/>
@@ -19,20 +19,12 @@
     </sheet>
   </design>
   <components>
-    <comp ref="IC1">
+    <comp ref="U8">
       <value>RN4871U</value>
       <footprint>Encoder:RN4871U</footprint>
       <libsource lib="Encoder" part="RN4871U" description=""/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>6052DDB9</tstamp>
-    </comp>
-    <comp ref="C1">
-      <value>1uF</value>
-      <footprint>Encoder:C_0603_1608Metric_Pad1.05x0.95mm_HandSolder</footprint>
-      <datasheet>~</datasheet>
-      <libsource lib="Device" part="C" description="Unpolarized capacitor"/>
-      <sheetpath names="/" tstamps="/"/>
-      <tstamp>60531985</tstamp>
     </comp>
     <comp ref="J1">
       <value>Conn_01x04_Male</value>
@@ -42,14 +34,6 @@
       <sheetpath names="/" tstamps="/"/>
       <tstamp>6053225A</tstamp>
     </comp>
-    <comp ref="C2">
-      <value>10uF</value>
-      <footprint>Encoder:C_0603_1608Metric_Pad1.05x0.95mm_HandSolder</footprint>
-      <datasheet>~</datasheet>
-      <libsource lib="Device" part="C" description="Unpolarized capacitor"/>
-      <sheetpath names="/" tstamps="/"/>
-      <tstamp>60536CD2</tstamp>
-    </comp>
     <comp ref="AE1">
       <value>Antenna</value>
       <footprint>Encoder:Antenna</footprint>
@@ -57,7 +41,7 @@
       <sheetpath names="/" tstamps="/"/>
       <tstamp>6055D6C9</tstamp>
     </comp>
-    <comp ref="L1">
+    <comp ref="R17">
       <value>L_Rf</value>
       <footprint>Encoder:L_0402_1005Metric</footprint>
       <datasheet>~</datasheet>
@@ -65,7 +49,7 @@
       <sheetpath names="/" tstamps="/"/>
       <tstamp>6057FAB6</tstamp>
     </comp>
-    <comp ref="C3">
+    <comp ref="C19">
       <value>C_Rf</value>
       <footprint>Encoder:C_0402_1005Metric</footprint>
       <datasheet>~</datasheet>
@@ -73,13 +57,29 @@
       <sheetpath names="/" tstamps="/"/>
       <tstamp>605849D6</tstamp>
     </comp>
-    <comp ref="C4">
+    <comp ref="C18">
       <value>C_Rf</value>
       <footprint>Encoder:C_0402_1005Metric</footprint>
       <datasheet>~</datasheet>
       <libsource lib="Device" part="C" description="Unpolarized capacitor"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>60585519</tstamp>
+    </comp>
+    <comp ref="C20">
+      <value>10uF</value>
+      <footprint>Encoder:C_0603_1608Metric_Pad1.05x0.95mm_HandSolder</footprint>
+      <datasheet>~</datasheet>
+      <libsource lib="Device" part="C" description="Unpolarized capacitor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>60536CD2</tstamp>
+    </comp>
+    <comp ref="C21">
+      <value>1uF</value>
+      <footprint>Encoder:C_0603_1608Metric_Pad1.05x0.95mm_HandSolder</footprint>
+      <datasheet>~</datasheet>
+      <libsource lib="Device" part="C" description="Unpolarized capacitor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>60531985</tstamp>
     </comp>
   </components>
   <libparts>
@@ -178,75 +178,75 @@
       <uri>D:\Program_Files\KiCad\share\kicad\library/Device.lib</uri>
     </library>
     <library logical="Encoder">
-      <uri>D:\pauld\Programming\NN54\Mechatronics\Hardware\Electrical\BEncoderBoard3(RN4871u)/../Library/Encoder.lib</uri>
+      <uri>D:\pauld\Programming\NN54\Mechatronics\Hardware\Electrical\BEncoderBoard3(4)/../Library/Encoder.lib</uri>
     </library>
   </libraries>
   <nets>
-    <net code="1" name="Net-(IC1-Pad13)">
-      <node ref="IC1" pin="13"/>
+    <net code="1" name="Net-(U8-Pad6)">
+      <node ref="U8" pin="6"/>
     </net>
-    <net code="2" name="GND">
-      <node ref="C4" pin="2"/>
-      <node ref="C3" pin="2"/>
-      <node ref="AE1" pin="2"/>
-      <node ref="C1" pin="2"/>
-      <node ref="IC1" pin="18"/>
-      <node ref="IC1" pin="12"/>
-      <node ref="C2" pin="2"/>
-      <node ref="J1" pin="1"/>
-    </net>
-    <net code="3" name="Net-(IC1-Pad2)">
-      <node ref="IC1" pin="2"/>
-    </net>
-    <net code="4" name="Net-(IC1-Pad3)">
-      <node ref="IC1" pin="3"/>
-    </net>
-    <net code="5" name="Net-(IC1-Pad14)">
-      <node ref="IC1" pin="14"/>
-    </net>
-    <net code="6" name="Net-(IC1-Pad15)">
-      <node ref="IC1" pin="15"/>
-    </net>
-    <net code="7" name="Net-(IC1-Pad6)">
-      <node ref="IC1" pin="6"/>
-    </net>
-    <net code="8" name="Net-(IC1-Pad8)">
-      <node ref="IC1" pin="8"/>
-    </net>
-    <net code="9" name="Net-(IC1-Pad9)">
-      <node ref="IC1" pin="9"/>
-    </net>
-    <net code="10" name="Net-(IC1-Pad10)">
-      <node ref="IC1" pin="10"/>
-    </net>
-    <net code="11" name="+3V3">
-      <node ref="IC1" pin="16"/>
-      <node ref="C2" pin="1"/>
-      <node ref="IC1" pin="11"/>
-      <node ref="IC1" pin="7"/>
-      <node ref="C1" pin="1"/>
+    <net code="2" name="+3V3">
+      <node ref="U8" pin="7"/>
+      <node ref="C20" pin="1"/>
+      <node ref="C21" pin="1"/>
+      <node ref="U8" pin="16"/>
+      <node ref="U8" pin="11"/>
       <node ref="J1" pin="4"/>
     </net>
-    <net code="12" name="Net-(C3-Pad1)">
-      <node ref="IC1" pin="1"/>
-      <node ref="C3" pin="1"/>
-      <node ref="L1" pin="1"/>
+    <net code="3" name="GND">
+      <node ref="C19" pin="2"/>
+      <node ref="J1" pin="1"/>
+      <node ref="U8" pin="18"/>
+      <node ref="U8" pin="12"/>
+      <node ref="AE1" pin="2"/>
+      <node ref="C21" pin="2"/>
+      <node ref="C20" pin="2"/>
+      <node ref="C18" pin="2"/>
     </net>
-    <net code="13" name="Net-(AE1-Pad1)">
-      <node ref="C4" pin="1"/>
+    <net code="4" name="Net-(U8-Pad2)">
+      <node ref="U8" pin="2"/>
+    </net>
+    <net code="5" name="Net-(U8-Pad3)">
+      <node ref="U8" pin="3"/>
+    </net>
+    <net code="6" name="Net-(U8-Pad14)">
+      <node ref="U8" pin="14"/>
+    </net>
+    <net code="7" name="Net-(U8-Pad15)">
+      <node ref="U8" pin="15"/>
+    </net>
+    <net code="8" name="Net-(U8-Pad8)">
+      <node ref="U8" pin="8"/>
+    </net>
+    <net code="9" name="Net-(U8-Pad9)">
+      <node ref="U8" pin="9"/>
+    </net>
+    <net code="10" name="Net-(U8-Pad10)">
+      <node ref="U8" pin="10"/>
+    </net>
+    <net code="11" name="Net-(U8-Pad13)">
+      <node ref="U8" pin="13"/>
+    </net>
+    <net code="12" name="Net-(AE1-Pad1)">
+      <node ref="R17" pin="2"/>
+      <node ref="C18" pin="1"/>
       <node ref="AE1" pin="1"/>
-      <node ref="L1" pin="2"/>
     </net>
-    <net code="14" name="Net-(IC1-Pad17)">
-      <node ref="IC1" pin="17"/>
+    <net code="13" name="Net-(C19-Pad1)">
+      <node ref="U8" pin="1"/>
+      <node ref="C19" pin="1"/>
+      <node ref="R17" pin="1"/>
     </net>
-    <net code="15" name="Net-(IC1-Pad5)">
+    <net code="14" name="Net-(U8-Pad17)">
+      <node ref="U8" pin="17"/>
+    </net>
+    <net code="15" name="Net-(J1-Pad3)">
       <node ref="J1" pin="3"/>
-      <node ref="IC1" pin="5"/>
+      <node ref="U8" pin="5"/>
     </net>
-    <net code="16" name="Net-(IC1-Pad4)">
+    <net code="16" name="Net-(J1-Pad2)">
       <node ref="J1" pin="2"/>
-      <node ref="IC1" pin="4"/>
+      <node ref="U8" pin="4"/>
     </net>
   </nets>
 </export>
