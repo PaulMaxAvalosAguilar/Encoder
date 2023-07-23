@@ -2,6 +2,17 @@
 #include "masters.h"
 #include "stm32g431xx.h"
 
+//-------------------SYSTICK-----------------------------------------------------------------------------------
+void __ucDrivers_SYSTICK_function_enableTimer()
+{
+    SysTick->CTRL |= SysTick_CTRL_ENABLE_Msk;
+}
+
+void __ucDrivers_SYSTICK_function_disableTimer()
+{
+    SysTick->CTRL &= ~SysTick_CTRL_ENABLE_Msk; // Stop the SysTick
+}
+
 //-------------------FLASH-------------------------------------------------------------------------------------
 void __ucDrivers_FLASH_function_EnableCache()
 {
@@ -16,6 +27,7 @@ void __ucDrivers_FLASH_function_Set1WSLatency()
     FLASH->ACR = (FLASH->ACR & (~FLASH_ACR_LATENCY)) | FLASH_ACR_LATENCY_1WS;
 }
 
+//-------------------FLASH-------------------------------------------------------------------------------------
 void __ucDrivers_RCC_function_TurnHSEOn()
 {
     RCC->CR |= RCC_CR_HSEON;             // Turn on
@@ -66,17 +78,6 @@ void __ucDrivers_RCC_function_AHBPrescalerReset()
 {
     // Prescaler set to 1
     RCC->CFGR = (RCC->CFGR & (~RCC_CFGR_HPRE)) | (0b0000 << RCC_CFGR_HPRE_Pos);
-}
-
-//-------------------SYSTICK-----------------------------------------------------------------------------------
-void __ucDrivers_SYSTICK_function_enableTimer()
-{
-    SysTick->CTRL |= SysTick_CTRL_ENABLE_Msk;
-}
-
-void __ucDrivers_SYSTICK_function_disableTimer()
-{
-    SysTick->CTRL &= ~SysTick_CTRL_ENABLE_Msk; // Stop the SysTick
 }
 
 //-------------------PWR---------------------------------------------------------------------------------------

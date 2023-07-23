@@ -49,7 +49,7 @@ void vPortSuppressTicksAndSleep(TickType_t xExpectedIdleTime)
     }
     else
     {
-        lcdPutsBlinkFree("SLEEP", 4);
+        lcdPutsBlinkFreeAtPos("SLEEP", 4);
 
         if (eSleepStatus == eNoTasksWaitingTimeout)
         {
@@ -67,7 +67,7 @@ void vPortSuppressTicksAndSleep(TickType_t xExpectedIdleTime)
         SleepTimerValues sleepTimer = __ucHAL_Sleeptimer_stopOneShot();
         exitLPR();
 
-        lcdPutsBlinkFree("", 4);
+        lcdPutsBlinkFreeAtPos("", 4);
 
         (sleepTimer.updateInterruptOcurred &&
          (sleepTimer.counter == 0))

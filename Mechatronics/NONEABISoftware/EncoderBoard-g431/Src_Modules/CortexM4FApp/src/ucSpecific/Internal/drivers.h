@@ -41,7 +41,7 @@ void __ucDrivers_RCC_function_SelectPLLAsClockSource(void);
 void __ucDrivers_RCC_function_AHBPrescale97656KhzFrom50mhz(void);
 void __ucDrivers_RCC_function_AHBPrescalerReset(void);
 
-//-------------------PWR------------------------------------
+//-------------------PWR-------------------------------------
 void __ucDrivers_PWR_enable_Clock(void);
 void __ucDrivers_PWR_disable_Clock(void);
 

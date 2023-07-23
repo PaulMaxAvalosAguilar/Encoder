@@ -3,18 +3,14 @@
 #include "queue.h"
 #include "semphr.h"
 
-#include "Utilities/itoa.h"
 #include "ucSpecific/Internal/masters.h"
 #include "ucSpecific/Internal/drivers.h"
 #include "ucSpecific/Public/hal.h"
 #include "main.h"
 
-#include <string.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include "stm32g431xx.h"
 
-#include "Processes/displayTask.h"
+#include "Processes/Priority2/displayTask.h"
 
 int main(void)
 {

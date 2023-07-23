@@ -16,7 +16,7 @@ void __ucHAL_Interrupts_function_disableInterrupts(void);
 void __ucHAL_Interrupts_function_reenableInterrupts(void);
 void __ucHAL_Interrupts_function_WaitForInterrupt(void);
 
-//-------------------SysFrequency-----------------------------------------------------------------
+//-------------------SYSFREQUENCY----------------------------------------------------------
 void __ucHAL_SysFreq_configure_initialState(void);
 void __ucHAL_SysFreq_function_enterSleepState(void);
 void __ucHAL_SysFreq_function_exitSleepState(void);
@@ -33,8 +33,12 @@ void __ucHAL_Display_configure(void);
 void __ucHAL_Display_function_transmit(
     uint8_t i2c_addr, uint8_t *buffer, uint32_t nbytes);
 
-//-------------------POWERSYSTEM-------------------------------------------------------------------
-void __ucHAL_POWERSYSTEM_configure(void);
+//-------------------BLUETOOTH-------------------------------------------------------------
+void __ucHAL_Bluetooth_configure(void);
+void __ucHAL_Bluetooth_function_transmitString(const char myString[]);
+
+//-------------------ADC-------------------------------------------------------------------
+void __ucHAL_ADC_configure(void);
 
 //-------------------SLEEPTIMER------------------------------------------------------------
 typedef struct SleepTimerValues

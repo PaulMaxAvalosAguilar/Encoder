@@ -6,7 +6,7 @@
 #include "timers.h"
 
 // Processes
-#include "displayTask.h"
+#include "Processes/Priority2/displayTask.h"
 
 // Utilities
 
@@ -63,7 +63,7 @@ void __batteryTask_enterDischargingRate(void)
 void batteryTask(void *args __attribute__((unused)))
 {
     // HAL inizialization
-    __ucHAL_POWERSYSTEM_configure();
+    __ucHAL_ADC_configure();
 
     // Module inizialization
 

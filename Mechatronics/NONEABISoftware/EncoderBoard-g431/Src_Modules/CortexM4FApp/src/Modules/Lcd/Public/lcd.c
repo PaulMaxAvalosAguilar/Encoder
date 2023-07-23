@@ -3,6 +3,7 @@
 #include "lcd.h"
 
 #include <string.h>
+#include "Utilities/itoa.h"
 
 //-Deps----------Defined elsewhere
 void transmit(uint8_t i2c_addr, uint8_t *buffer, uint32_t nbytes);
@@ -116,7 +117,7 @@ void lcd_gotoxy(uint8_t x, uint8_t y)
   lcd_command(commandSequence, sizeof(commandSequence));
 }
 
-void lcd_puts(const char *s)
+void lcd_putString(const char *s)
 {
 
   int count = 0;
@@ -140,7 +141,14 @@ void lcd_puts(const char *s)
   lcd_data(lcdSendBuffer, (count) + 1); // print char at display
 }
 
-void lcdPutsBlinkFree(const char *g, int ypos)
+void lcd_putInteger(int number)
+{
+  char numBuffer[5];
+  itoa(number, numBuffer, 10);
+  lcd_putString(numBuffer);
+}
+
+void lcdPutsBlinkFree(const char *g)
 {
   int i = 0;
   char text[22]; // max used characters used plus null terminator
@@ -162,6 +170,27 @@ void lcdPutsBlinkFree(const char *g, int ypos)
     i++;
   }
   text[i] = '\0';
+  lcd_putString(text);
+}
+
+void lcdPutIntegerAtPos(int number, int xpos, int ypos)
+{
+  lcd_gotoxy(xpos, ypos);
+  lcd_putInteger(number);
+}
+
+void lcdPutsBlinkFreeAtPos(const char *g, int ypos)
+{
   lcd_gotoxy(0, ypos);
-  lcd_puts(text);
+  lcdPutsBlinkFree(g);
+}
+
+void lcdPutStringAndIntBlinksFreeAtPos(const char *g, int number, int ypos)
+{
+  char buffer[22]; // TODO calculate this value and trim bigger strings
+  char numBuffer[5];
+  strcpy(buffer, g);
+  itoa(number, numBuffer, 10);
+  strcat(buffer, numBuffer);
+  lcdPutsBlinkFreeAtPos(buffer, ypos);
 }

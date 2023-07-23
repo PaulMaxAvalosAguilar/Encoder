@@ -44,7 +44,7 @@ void __ucHAL_Interrupts_function_WaitForInterrupt()
     __asm volatile("isb");
 }
 
-//-------------------CLOCK-----------------------------------------------------------------
+//-------------------SYSFREQUENCY-------------------------------------------------------------
 void __ucHAL_SysFreq_configure_initialState()
 {
     __ucDrivers_FLASH_function_EnableCache();
@@ -110,8 +110,18 @@ void __ucHAL_Display_function_transmit(
     __ucDrivers_I2C_disable_Clock();
 }
 
-//-------------------POWERSYSTEM-------------------------------------------------------------------
-void __ucHAL_POWERSYSTEM_configure()
+//-------------------BLUETOOH---------------------------------------------------------------
+
+void __ucHAL_Bluetooth_configure()
+{
+}
+
+void __ucHAL_Bluetooth_function_transmitString(const char myString[])
+{
+}
+
+//-------------------ADC--------------------------------------------------------------------
+void __ucHAL_ADC_configure()
 {
     // Battery voltage level detection
     __ucDrivers_ADC_conf_IndependentClock_SysClkSource();
