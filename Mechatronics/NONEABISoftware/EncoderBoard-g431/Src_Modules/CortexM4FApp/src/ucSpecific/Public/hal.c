@@ -13,7 +13,7 @@ void __ucHAL_Interrupts_configure()
     NVIC_SetPriority(USART1_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 1, 0));
     NVIC_SetPriority(EXTI15_10_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 2, 0));
 
-    //  NVIC_EnableIRQ(TIM2_IRQn);
+    NVIC_EnableIRQ(TIM2_IRQn);
     NVIC_EnableIRQ(TIM3_IRQn);
     NVIC_EnableIRQ(EXTI15_10_IRQn);
     NVIC_EnableIRQ(USART1_IRQn);
@@ -61,6 +61,7 @@ void __ucHAL_SysFreq_configure_initialState()
 void __ucHAL_SysFreq_function_enterSleepState()
 {
     __ucDrivers_RCC_function_AHBPrescale97656KhzFrom50mhz();
+    __ucDrivers_PWR_enable_Clock();
     __ucDrivers_PWR_function_TurnOnLPR();
 }
 
@@ -68,6 +69,7 @@ void __ucHAL_SysFreq_function_exitSleepState()
 {
     __ucDrivers_PWR_function_TurnOffLPR();
     __ucDrivers_RCC_function_AHBPrescalerReset();
+    __ucDrivers_PWR_disable_Clock();
 }
 
 //-------------------DMA-------------------------------------------------------------------

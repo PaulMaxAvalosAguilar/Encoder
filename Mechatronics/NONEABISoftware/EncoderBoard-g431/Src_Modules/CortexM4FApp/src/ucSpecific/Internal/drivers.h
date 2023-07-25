@@ -42,13 +42,61 @@ void __ucDrivers_RCC_function_AHBPrescale97656KhzFrom50mhz(void);
 void __ucDrivers_RCC_function_AHBPrescalerReset(void);
 
 //-------------------PWR-------------------------------------
+//-----------Clocks
 void __ucDrivers_PWR_enable_Clock(void);
 void __ucDrivers_PWR_disable_Clock(void);
 
+//-----------Configurations
+
+//-----------Functions
 void __ucDrivers_PWR_function_TurnOnLPR(void);
 void __ucDrivers_PWR_function_TurnOffLPR(void); // Should be called after function_TurnOnLPR()
 
-// I2C-------------------------------------------------------
+// ------------------LPTIM---------------------------------------
+//-----------Clocks
+void __ucDrivers_LPTIM_enable_Clock(void);
+void __ucDrivers_LPTIM_disable_Clock(void);
+void __ucDrivers_LPTIM_enable_GPIO_Clock(void);
+void __ucDrivers_LPTIM_disable_GPIO_Clock(void);
+void __ucDrivers_LPTIM_conf_IndependentClock_SysClkSource(void);
+
+//-----------Configurations
+void __ucDrivers_LPTIM_conf_Periphereal(void);
+void __ucDrivers_LPTIM_conf_GPIO_Source(void);
+
+//-----------Functions
+void __ucDrivers_LPTIM_function_Transmit(uint8_t *buffer, uint32_t nbytes);
+
+// ------------------TIM2---------------------------------------
+//-----------Clocks
+void __ucDrivers_TIM2_enable_Clock(void);
+void __ucDrivers_TIM2_disable_Clock(void);
+void __ucDrivers_TIM2_enable_GPIO_Clock(void);
+void __ucDrivers_TIM2_disable_GPIO_Clock(void);
+
+//-----------Configurations
+void __ucDrivers_TIM2_conf_Periphereal(void);
+void __ucDrivers_TIM2_conf_GPIO_Source(void);
+
+//-----------Functions
+
+// ------------------LPUART-------------------------------------
+#define UART_DMA_Transmission_Enabled
+//-----------Clocks
+void __ucDrivers_LPUART_enable_Clock(void);
+void __ucDrivers_LPUART_disable_Clock(void);
+void __ucDrivers_LPUART_enable_GPIO_Clock(void);
+void __ucDrivers_LPUART_disable_GPIO_Clock(void);
+void __ucDrivers_LPUART_conf_IndependentClock_SysClkSource(void);
+
+//-----------Configurations
+void __ucDrivers_LPUART_conf_Periphereal(void);
+void __ucDrivers_LPUART_conf_GPIO_Source(void);
+
+//-----------Functions
+void __ucDrivers_LPUART_function_Transmit(uint8_t *buffer, uint32_t nbytes);
+
+// ------------------I2C-------------------------------------
 #define I2C_DMA_Transmission_Enabled
 //-----------Clocks
 void __ucDrivers_I2C_enable_Clock(void);
@@ -92,17 +140,5 @@ uint16_t __ucDrivers_TIM3_function_readCounter(void);
 uint8_t __ucDrivers_TIM3_function__readInterruptPendingStatus(void);
 void __ucDrivers_TIM3_function__clearInterruptPendingStatus(void);
 void __ucDrivers_TIM3_function_stopOneShotTimer(void);
-
-//-------------------LPTIM----------------------------------
-//-----------Clocks
-void __ucDrivers_LPTIM_enable_Clock(void);
-void __ucDrivers_LPTIM_disable_Clock(void);
-void __ucDrivers_LPTIM_enable_GPIO_Clock(void);
-void __ucDrivers_LPTIM_disable_GPIO_Clock(void);
-void __ucDrivers_LPTIM_conf_IndependentClock_PCLKSource(void);
-
-//-----------Configurations
-void __ucDrivers_LPTIM_conf_Periphereal(void);
-void __ucDrivers_LPTIM_conf_GPIO_Source(void);
 
 #endif

@@ -85,19 +85,6 @@ int main(void)
   GPIOB->AFR[0] = (GPIOB->AFR[0] & (~GPIO_AFRL_AFSEL6)) | (7 << GPIO_AFRL_AFSEL6_Pos);              // Alternate function 7
 
   // TIM2 GPIO CONFIGURATION
-  // PA15 TIM2_CH1
-  GPIOA->MODER = (GPIOA->MODER & (~GPIO_MODER_MODE15)) | (0b10 << GPIO_MODER_MODE15_Pos);             // Alternate function mode
-  GPIOA->OTYPER &= (~GPIO_OTYPER_OT15);                                                               // Push pull
-  GPIOA->OSPEEDR = (GPIOA->OSPEEDR & (~GPIO_OSPEEDR_OSPEED15)) | (0b00 << GPIO_OSPEEDR_OSPEED15_Pos); // Low speed
-  GPIOA->PUPDR = (GPIOA->PUPDR & (~GPIO_PUPDR_PUPD15)) | (0b00 << GPIO_PUPDR_PUPD15_Pos);             // No pull up, no pull down
-  GPIOA->AFR[1] = (GPIOA->AFR[1] & (~GPIO_AFRH_AFSEL15)) | (1 << GPIO_AFRH_AFSEL15_Pos);              // Alternate function 1
-
-  // PB3 TIM2_CH2
-  GPIOB->MODER = (GPIOB->MODER & (~GPIO_MODER_MODE3)) | (0b10 << GPIO_MODER_MODE3_Pos);             // Alternate function mode
-  GPIOB->OTYPER &= (~GPIO_OTYPER_OT3);                                                              // Push pull
-  GPIOB->OSPEEDR = (GPIOB->OSPEEDR & (~GPIO_OSPEEDR_OSPEED3)) | (0b00 << GPIO_OSPEEDR_OSPEED3_Pos); // Low speed
-  GPIOB->PUPDR = (GPIOB->PUPDR & (~GPIO_PUPDR_PUPD3)) | (0b00 << GPIO_PUPDR_PUPD3_Pos);             // No pull up, no pull dowxn
-  GPIOB->AFR[0] = (GPIOB->AFR[0] & (~GPIO_AFRL_AFSEL3)) | (1 << GPIO_AFRL_AFSEL3_Pos);              // Alternate function 11
 
   // ENC ENABLE CONFIGURATION
   // PB9
@@ -170,36 +157,6 @@ int main(void)
   DMA1_Channel2->CCR = (DMA1_Channel2->CCR &= (~DMA_CCR_MSIZE)) | (0b00 << DMA_CCR_MSIZE_Pos); //Memory size 8 bits
 
   DMAMUX1_Channel1->CCR = (DMAMUX1_Channel1->CCR & (~DMAMUX_CxCR_DMAREQ_ID)) | (25 << DMAMUX_CxCR_DMAREQ_ID_Pos);//Request 25
-  */
-
-  //---------------------CONFIGURE TIM2-------------------------
-  /*
-
-  RCC->APB1ENR1 |= RCC_APB1ENR1_TIM2EN;//Enable TIM2 clock
-
-  //TIM2 CONFIGURATION
-
-  TIM2->TISEL = (TIM2->TISEL & (~TIM_TISEL_TI1SEL)) | (0b0000 << TIM_TISEL_TI1SEL_Pos);//tim_ti1 input on TIMx_CH1
-  TIM2->TISEL = (TIM2->TISEL & (~TIM_TISEL_TI2SEL)) | (0b0000 << TIM_TISEL_TI2SEL_Pos);//tim_ti2 input on TIMx_CH2
-  TIM2->CCER |= (TIM_CCER_CC1NP | TIM_CCER_CC1P);//edge selection both edges for tim_ti1 source
-  //TIM2->CCER |= (TIM_CCER_CC2NP | TIM_CCER_CC2P);//edge selection both edges for tim_ti2 source
-  TIM2->CCMR1 = (TIM2->CCMR1 & (~TIM_CCMR1_IC1F)) | (0b0011 << TIM_CCMR1_IC1F_Pos);//Tim_ti1 filtered for 8 clock cycles
-  //TIM2->CCMR1 = (TIM2->CCMR1 & (~TIM_CCMR1_IC2F)) | (0b0011 << TIM_CCMR1_IC2F_Pos);//Tim_ti2 filtered for 8 clock cycles
-  TIM2->CCMR1 = (TIM2->CCMR1 & (~TIM_CCMR1_CC1S)) | (0b01 << TIM_CCMR1_CC1S_Pos);//(input mode)Tim_ic1 mapping on tim_ti1
-  //TIM2->CCMR1 = (TIM2->CCMR1 & (~TIM_CCMR1_CC2S)) | (0b01 << TIM_CCMR1_CC2S_Pos);//(input mode)Tim_ic2 mapping on tim_ti2
-  TIM2->CCER |= (TIM_CCER_CC1E);//Capture enabled for Capture register 1
-
-  TIM2->CR2 |= TIM_CR2_TI1S;// tim_ti1 and tim_ti2 inputs XORed on tim_ti1
-  TIM2->DIER = TIM_DIER_CC1IE;//Enable capture 1 interrupt
-  TIM2->CR1 |= TIM_CR1_URS;//Only counter overflow generates interrupt
-  TIM2->ARR = 0XFFFFFFFF;//Auto reload register
-  TIM2->PSC = 4;//Preescaler / actual value = TIM2->PSC + 1
-  TIM2->CNT = 0;
-  TIM2->EGR |= TIM_EGR_UG;//Generate update
-
-  TIM2->CR1 |= TIM_CR1_CEN; //Start tim2Counter
-
-  RCC->APB1ENR1 &= ~RCC_APB1ENR1_TIM2EN;//Disable TIM2 clock
   */
 
   //---------------------CONFIGURE TIM3-------------------------

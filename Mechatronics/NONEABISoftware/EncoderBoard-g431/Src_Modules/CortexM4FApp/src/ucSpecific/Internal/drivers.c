@@ -93,7 +93,6 @@ void __ucDrivers_PWR_disable_Clock(void)
 
 void __ucDrivers_PWR_function_TurnOnLPR(void)
 {
-    __ucDrivers_PWR_enable_Clock();
     PWR->CR1 |= PWR_CR1_LPR;
     while (!(PWR->SR2 & PWR_SR2_REGLPS))
         ; // Wait till low power regulator started
@@ -106,7 +105,174 @@ void __ucDrivers_PWR_function_TurnOffLPR(void)
     PWR->CR1 &= ~PWR_CR1_LPR;
     while ((PWR->SR2 & PWR_SR2_REGLPF))
         ;
-    __ucDrivers_PWR_disable_Clock();
+}
+
+// ------------------LPTIM--------------------------------------
+//-----------Clocks
+void __ucDrivers_LPTIM_enable_Clock()
+{
+    RCC->APB1ENR1 |= RCC_APB1ENR1_LPTIM1EN;
+}
+
+void __ucDrivers_LPTIM_disable_Clock()
+{
+    RCC->APB1ENR1 &= ~RCC_APB1ENR1_LPTIM1EN;
+}
+
+void __ucDrivers_LPTIM_enable_GPIO_Clock()
+{
+    RCC->AHB2ENR |= RCC_AHB2ENR_GPIOBEN;
+}
+
+void __ucDrivers_LPTIM_disable_GPIO_Clock()
+{
+
+    RCC->AHB2ENR &= ~RCC_AHB2ENR_GPIOBEN;
+}
+
+void __ucDrivers_LPTIM_conf_IndependentClock_SysClkSource()
+{
+    RCC->CCIPR = (RCC->CCIPR & (~RCC_CCIPR_LPTIM1SEL)) | (0b00 << RCC_CCIPR_LPTIM1SEL_Pos); // PCLK selected as LPTIM1 clock
+}
+
+//-----------Configurations
+void __ucDrivers_LPTIM_conf_Periphereal()
+{
+    LPTIM1->CFGR = (LPTIM1->CFGR & (~LPTIM_CFGR_CKFLT)) | (0b11 << LPTIM_CFGR_CKFLT_Pos); // 8 clock periods for valid transition
+    LPTIM1->CFGR &= ~LPTIM_CFGR_CKSEL;                                                    ////LPTIM clocked by internal clock source
+    LPTIM1->CFGR = (LPTIM1->CFGR & (~LPTIM_CFGR_CKPOL)) | (0b10 << LPTIM_CFGR_CKPOL_Pos); // both edges are active edges
+    LPTIM1->CFGR |= LPTIM_CFGR_COUNTMODE;                                                 // External input 1
+    LPTIM1->CFGR |= LPTIM_CFGR_ENC;                                                       // Encoder mode enable
+    LPTIM1->CR |= LPTIM_CR_ENABLE;                                                        // LPTIM1 Enable
+    LPTIM1->ICR |= LPTIM_ICR_ARROKCF;
+    LPTIM1->ARR = 65535;
+    while (!(LPTIM1->ISR & LPTIM_ISR_ARROK))
+        ;
+    LPTIM1->CR |= LPTIM_CR_CNTSTRT; // Timer start in Continuous mode
+}
+
+void __ucDrivers_LPTIM_conf_GPIO_Source()
+{
+    // PB5 LPTIM_IN1
+    GPIOB->MODER = (GPIOB->MODER & (~GPIO_MODER_MODE5)) | (0b10 << GPIO_MODER_MODE5_Pos);             // Alternate function mode
+    GPIOB->OTYPER &= (~GPIO_OTYPER_OT5);                                                              // Push pull
+    GPIOB->OSPEEDR = (GPIOB->OSPEEDR & (~GPIO_OSPEEDR_OSPEED5)) | (0b00 << GPIO_OSPEEDR_OSPEED5_Pos); // Low speed
+    GPIOB->PUPDR = (GPIOB->PUPDR & (~GPIO_PUPDR_PUPD5)) | (0b00 << GPIO_PUPDR_PUPD5_Pos);             // No pull up, no pull down
+    GPIOB->AFR[0] = (GPIOB->AFR[0] & (~GPIO_AFRL_AFSEL5)) | (11 << GPIO_AFRL_AFSEL5_Pos);             // Alternate function 11
+
+    // PB7 LPTIM_IN2
+    GPIOB->MODER = (GPIOB->MODER & (~GPIO_MODER_MODE7)) | (0b10 << GPIO_MODER_MODE7_Pos);             // Alternate function mode
+    GPIOB->OTYPER &= (~GPIO_OTYPER_OT7);                                                              // Push pull
+    GPIOB->OSPEEDR = (GPIOB->OSPEEDR & (~GPIO_OSPEEDR_OSPEED7)) | (0b00 << GPIO_OSPEEDR_OSPEED7_Pos); // Low speed
+    GPIOB->PUPDR = (GPIOB->PUPDR & (~GPIO_PUPDR_PUPD7)) | (0b00 << GPIO_PUPDR_PUPD7_Pos);             // No pull up, no pull down
+    GPIOB->AFR[0] = (GPIOB->AFR[0] & (~GPIO_AFRL_AFSEL7)) | (11 << GPIO_AFRL_AFSEL7_Pos);             // Alternate function 11
+}
+
+//-----------Functions
+
+// ------------------TIM2---------------------------------------
+//-----------Clocks
+void __ucDrivers_TIM2_enable_Clock()
+{
+    RCC->APB1ENR1 |= RCC_APB1ENR1_TIM2EN;
+}
+
+void __ucDrivers_TIM2_disable_Clock()
+{
+
+    RCC->APB1ENR1 &= ~RCC_APB1ENR1_TIM2EN;
+}
+
+void __ucDrivers_TIM2_enable_GPIO_Clock()
+{
+    RCC->AHB2ENR |= RCC_AHB2ENR_GPIOAEN;
+    RCC->AHB2ENR |= RCC_AHB2ENR_GPIOBEN;
+}
+
+void __ucDrivers_TIM2_disable_GPIO_Clock()
+{
+    RCC->AHB2ENR &= ~RCC_AHB2ENR_GPIOAEN;
+    RCC->AHB2ENR &= ~RCC_AHB2ENR_GPIOBEN;
+}
+
+//-----------Configurations
+void __ucDrivers_TIM2_conf_Periphereal()
+{
+    TIM2->TISEL = (TIM2->TISEL & (~TIM_TISEL_TI1SEL)) | (0b0000 << TIM_TISEL_TI1SEL_Pos); // tim_ti1 input on TIMx_CH1
+    TIM2->TISEL = (TIM2->TISEL & (~TIM_TISEL_TI2SEL)) | (0b0000 << TIM_TISEL_TI2SEL_Pos); // tim_ti2 input on TIMx_CH2
+    TIM2->CCER |= (TIM_CCER_CC1NP | TIM_CCER_CC1P);                                       // edge selection both edges for tim_ti1 source
+    // TIM2->CCER |= (TIM_CCER_CC2NP | TIM_CCER_CC2P);//edge selection both edges for tim_ti2 source
+    TIM2->CCMR1 = (TIM2->CCMR1 & (~TIM_CCMR1_IC1F)) | (0b0011 << TIM_CCMR1_IC1F_Pos); // Tim_ti1 filtered for 8 clock cycles
+    // TIM2->CCMR1 = (TIM2->CCMR1 & (~TIM_CCMR1_IC2F)) | (0b0011 << TIM_CCMR1_IC2F_Pos);//Tim_ti2 filtered for 8 clock cycles
+    TIM2->CCMR1 = (TIM2->CCMR1 & (~TIM_CCMR1_CC1S)) | (0b01 << TIM_CCMR1_CC1S_Pos); //(input mode)Tim_ic1 mapping on tim_ti1
+    // TIM2->CCMR1 = (TIM2->CCMR1 & (~TIM_CCMR1_CC2S)) | (0b01 << TIM_CCMR1_CC2S_Pos);//(input mode)Tim_ic2 mapping on tim_ti2
+    TIM2->CCER |= (TIM_CCER_CC1E); // Capture enabled for Capture register 1
+
+    TIM2->CR2 |= TIM_CR2_TI1S;   // tim_ti1 and tim_ti2 inputs XORed on tim_ti1
+    TIM2->DIER = TIM_DIER_CC1IE; // Enable capture 1 interrupt
+    TIM2->CR1 |= TIM_CR1_URS;    // Only counter overflow generates interrupt
+    TIM2->ARR = 0XFFFFFFFF;      // Auto reload register
+    TIM2->PSC = 4;               // Preescaler / actual value = TIM2->PSC + 1
+    TIM2->CNT = 0;
+    TIM2->EGR |= TIM_EGR_UG; // Generate update
+
+    // TIM2->CR1 |= TIM_CR1_CEN; // Start tim2Counter
+}
+
+void __ucDrivers_TIM2_conf_GPIO_Source()
+{
+    // PA15 TIM2_CH1
+    GPIOA->MODER = (GPIOA->MODER & (~GPIO_MODER_MODE15)) | (0b10 << GPIO_MODER_MODE15_Pos);             // Alternate function mode
+    GPIOA->OTYPER &= (~GPIO_OTYPER_OT15);                                                               // Push pull
+    GPIOA->OSPEEDR = (GPIOA->OSPEEDR & (~GPIO_OSPEEDR_OSPEED15)) | (0b00 << GPIO_OSPEEDR_OSPEED15_Pos); // Low speed
+    GPIOA->PUPDR = (GPIOA->PUPDR & (~GPIO_PUPDR_PUPD15)) | (0b00 << GPIO_PUPDR_PUPD15_Pos);             // No pull up, no pull down
+    GPIOA->AFR[1] = (GPIOA->AFR[1] & (~GPIO_AFRH_AFSEL15)) | (1 << GPIO_AFRH_AFSEL15_Pos);              // Alternate function 1
+
+    // PB3 TIM2_CH2
+    GPIOB->MODER = (GPIOB->MODER & (~GPIO_MODER_MODE3)) | (0b10 << GPIO_MODER_MODE3_Pos);             // Alternate function mode
+    GPIOB->OTYPER &= (~GPIO_OTYPER_OT3);                                                              // Push pull
+    GPIOB->OSPEEDR = (GPIOB->OSPEEDR & (~GPIO_OSPEEDR_OSPEED3)) | (0b00 << GPIO_OSPEEDR_OSPEED3_Pos); // Low speed
+    GPIOB->PUPDR = (GPIOB->PUPDR & (~GPIO_PUPDR_PUPD3)) | (0b00 << GPIO_PUPDR_PUPD3_Pos);             // No pull up, no pull dowxn
+    GPIOB->AFR[0] = (GPIOB->AFR[0] & (~GPIO_AFRL_AFSEL3)) | (1 << GPIO_AFRL_AFSEL3_Pos);              // Alternate function 1
+}
+
+//-----------Functions
+
+// ------------------LPUART-------------------------------------
+#define UART_DMA_Transmission_Enabled
+//-----------Clocks
+void __ucDrivers_LPUART_enable_Clock()
+{
+}
+
+void __ucDrivers_LPUART_disable_Clock()
+{
+}
+
+void __ucDrivers_LPUART_enable_GPIO_Clock()
+{
+}
+
+void __ucDrivers_LPUART_disable_GPIO_Clock()
+{
+}
+
+void __ucDrivers_LPUART_conf_IndependentClock_SysClkSource()
+{
+}
+
+//-----------Configurations
+void __ucDrivers_LPUART_conf_Periphereal()
+{
+}
+
+void __ucDrivers_LPUART_conf_GPIO_Source()
+{
+}
+
+//-----------Functions
+void __ucDrivers_LPUART_function_Transmit(uint8_t *buffer, uint32_t nbytes)
+{
 }
 
 //-------------------I2C---------------------------------------------------------------------------------------
@@ -331,63 +497,4 @@ void __ucDrivers_TIM3_function__clearInterruptPendingStatus()
 void __ucDrivers_TIM3_function_stopOneShotTimer()
 {
     TIM3->CR1 &= ~TIM_CR1_CEN;
-}
-
-//-------------------LIPTM------------------------------------------------------------------------------------
-
-void __ucDrivers_LPTIM_enable_Clock()
-{
-    RCC->APB1ENR1 |= RCC_APB1ENR1_LPTIM1EN;
-}
-
-void __ucDrivers_LPTIM_disable_Clock()
-{
-    RCC->APB1ENR1 &= ~RCC_APB1ENR1_LPTIM1EN;
-}
-
-void __ucDrivers_LPTIM_enable_GPIO_Clock()
-{
-    RCC->AHB2ENR |= RCC_AHB2ENR_GPIOBEN;
-}
-
-void __ucDrivers_LPTIM_disable_GPIO_Clock()
-{
-    RCC->AHB2ENR &= ~RCC_AHB2ENR_GPIOBEN;
-}
-
-void __ucDrivers_LPTIM_conf_IndependentClock_PCLKSource()
-{
-    RCC->CCIPR = (RCC->CCIPR & (~RCC_CCIPR_LPTIM1SEL)) | (0b00 << RCC_CCIPR_LPTIM1SEL_Pos); // PCLK selected as LPTIM1 clock
-}
-
-void __ucDrivers_LPTIM_conf_Periphereal()
-{
-    LPTIM1->CFGR = (LPTIM1->CFGR & (~LPTIM_CFGR_CKFLT)) | (0b11 << LPTIM_CFGR_CKFLT_Pos); // 8 clock periods for valid transition
-    LPTIM1->CFGR &= ~LPTIM_CFGR_CKSEL;                                                    ////LPTIM clocked by internal clock source
-    LPTIM1->CFGR = (LPTIM1->CFGR & (~LPTIM_CFGR_CKPOL)) | (0b10 << LPTIM_CFGR_CKPOL_Pos); // both edges are active edges
-    LPTIM1->CFGR |= LPTIM_CFGR_COUNTMODE;                                                 // External input 1
-    LPTIM1->CFGR |= LPTIM_CFGR_ENC;                                                       // Encoder mode enable
-    LPTIM1->CR |= LPTIM_CR_ENABLE;                                                        // LPTIM1 Enable
-    LPTIM1->ICR |= LPTIM_ICR_ARROKCF;
-    LPTIM1->ARR = 65535;
-    while (!(LPTIM1->ISR & LPTIM_ISR_ARROK))
-        ;
-    LPTIM1->CR |= LPTIM_CR_CNTSTRT; // Timer start in Continuous mode
-}
-
-void __ucDrivers_LPTIM_conf_GPIO_Source()
-{
-    // PB5 LPTIM_IN1
-    GPIOB->MODER = (GPIOB->MODER & (~GPIO_MODER_MODE5)) | (0b10 << GPIO_MODER_MODE5_Pos);             // Alternate function mode
-    GPIOB->OTYPER &= (~GPIO_OTYPER_OT5);                                                              // Push pull
-    GPIOB->OSPEEDR = (GPIOB->OSPEEDR & (~GPIO_OSPEEDR_OSPEED5)) | (0b00 << GPIO_OSPEEDR_OSPEED5_Pos); // Low speed
-    GPIOB->PUPDR = (GPIOB->PUPDR & (~GPIO_PUPDR_PUPD5)) | (0b00 << GPIO_PUPDR_PUPD5_Pos);             // No pull up, no pull down
-    GPIOB->AFR[0] = (GPIOB->AFR[0] & (~GPIO_AFRL_AFSEL5)) | (11 << GPIO_AFRL_AFSEL5_Pos);             // Alternate function 11
-
-    // PB7 LPTIM_IN2
-    GPIOB->MODER = (GPIOB->MODER & (~GPIO_MODER_MODE7)) | (0b10 << GPIO_MODER_MODE7_Pos);             // Alternate function mode
-    GPIOB->OTYPER &= (~GPIO_OTYPER_OT7);                                                              // Push pull
-    GPIOB->OSPEEDR = (GPIOB->OSPEEDR & (~GPIO_OSPEEDR_OSPEED7)) | (0b00 << GPIO_OSPEEDR_OSPEED7_Pos); // Low speed
-    GPIOB->PUPDR = (GPIOB->PUPDR & (~GPIO_PUPDR_PUPD7)) | (0b00 << GPIO_PUPDR_PUPD7_Pos);             // No pull up, no pull down
-    GPIOB->AFR[0] = (GPIOB->AFR[0] & (~GPIO_AFRL_AFSEL7)) | (11 << GPIO_AFRL_AFSEL7_Pos);             // Alternate function 11
 }

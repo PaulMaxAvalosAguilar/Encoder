@@ -11,6 +11,7 @@ void __ucDrivers_DMAMUX_enable_Clock(void);
 void __ucDrivers_DMAMUX_disable_Clock(void);
 
 //-----------Configurations
+void __ucDrivers_DMA_conf_Channel3ForLPUART(void);
 void __ucDrivers_DMA_conf_Channel3ForI2CTX(void);
 
 //-----------Functions
