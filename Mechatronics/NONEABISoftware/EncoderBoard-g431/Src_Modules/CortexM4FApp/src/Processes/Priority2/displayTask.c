@@ -5,8 +5,9 @@
 #include "queue.h"
 
 // Processes
-#include "Processes/Priority2/controllerTXTask.h"
 #include "Processes/Priority1/batteryTask.h"
+#include "Processes/Priority2/controllerTXTask.h"
+#include "Processes/Priority3/controllerRXTask.h"
 
 // Utilities
 #include "Utilities/itoa.h"
@@ -64,10 +65,11 @@ void displayTask(void *args __attribute__((unused)))
     // Show that task inizialization worked
     lcdPutsBlinkFreeAtPos("  Paul's Inventions   ", ScreenPosition_Header);
 
-    // Configure child tasks
+    // Pre loop tasks
     vTaskSuspendAll();
     __controllerTXTask_init();
     __batteryTask_init();
+    __controllerRXTask_init();
     xTaskResumeAll();
 
     for (;;)

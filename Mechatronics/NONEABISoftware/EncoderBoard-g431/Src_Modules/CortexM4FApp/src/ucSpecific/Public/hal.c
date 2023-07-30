@@ -1,5 +1,5 @@
 #include "hal.h"
-#include "../Internal/masters.h"
+#include "../Internal/dma.h"
 #include "../Internal/drivers.h"
 #include "stm32g431xx.h"
 
@@ -10,13 +10,13 @@ void __ucHAL_Interrupts_configure()
 
     NVIC_SetPriority(TIM2_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 0, 0));
     NVIC_SetPriority(TIM3_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 0, 0));
-    NVIC_SetPriority(USART1_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 1, 0));
+    NVIC_SetPriority(LPUART1_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 1, 0));
     NVIC_SetPriority(EXTI15_10_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 2, 0));
 
     NVIC_EnableIRQ(TIM2_IRQn);
     NVIC_EnableIRQ(TIM3_IRQn);
     NVIC_EnableIRQ(EXTI15_10_IRQn);
-    NVIC_EnableIRQ(USART1_IRQn);
+    NVIC_EnableIRQ(LPUART1_IRQn);
 }
 
 void __ucHAL_Interrupts_function_disableInterrupts()
@@ -77,7 +77,9 @@ void __ucHAL_DMA_configure()
 {
     __ucDrivers_DMA_enable_Clock();
     __ucDrivers_DMAMUX_enable_Clock();
-    __ucDrivers_DMA_conf_Channel3ForI2CTX();
+    __ucDrivers_DMA_conf_Channel1ForLPUART_RX(bluetoothReceiveBuffer, BLUETOOTH_RX_BUFFER_LEN);
+    __ucDrivers_DMA_conf_Channel2ForLPUART_TX();
+    __ucDrivers_DMA_conf_Channel3ForI2C_TX();
 }
 
 //-------------------RTOSTIMER-------------------------------------------------------------
@@ -91,6 +93,24 @@ void __ucHAL_RtosTimer_function_resume()
     __ucDrivers_SYSTICK_function_enableTimer();
 }
 
+//-------------------BLUETOOH---------------------------------------------------------------
+uint8_t bluetoothReceiveBuffer[BLUETOOTH_RX_BUFFER_LEN] = {0};
+
+void __ucHAL_Bluetooth_configure()
+{
+    __ucDrivers_LPUART_conf_IndependentClock_SysClkSource();
+    __ucDrivers_LPUART_enable_Clock();
+    __ucDrivers_LPUART_conf_Periphereal();
+
+    __ucDrivers_LPUART_enable_GPIO_Clock();
+    __ucDrivers_LPUART_conf_GPIO_Source();
+}
+
+void __ucHAL_Bluetooth_function_transmit(uint8_t *buffer, uint32_t nbytes)
+{
+    __ucDrivers_LPUART_function_Transmit(buffer, nbytes);
+}
+
 //-------------------DISPLAY---------------------------------------------------------------
 void __ucHAL_Display_configure()
 {
@@ -101,29 +121,19 @@ void __ucHAL_Display_configure()
     __ucDrivers_I2C_enable_GPIO_Clock();
     __ucDrivers_I2C_conf_GPIO_Source();
 
-    __ucDrivers_I2C_disable_Clock();
+    __ucDrivers_I2C_disable_Clock(); // Clock gating
 }
 
 void __ucHAL_Display_function_transmit(
     uint8_t i2c_addr, uint8_t *buffer, uint32_t nbytes)
 {
-    __ucDrivers_I2C_enable_Clock();
+    __ucDrivers_I2C_enable_Clock(); // Clock gating
     __ucDrivers_I2C_function_Transmit(i2c_addr, buffer, nbytes);
-    __ucDrivers_I2C_disable_Clock();
+    __ucDrivers_I2C_disable_Clock(); // Clock gating
 }
 
-//-------------------BLUETOOH---------------------------------------------------------------
-
-void __ucHAL_Bluetooth_configure()
-{
-}
-
-void __ucHAL_Bluetooth_function_transmitString(const char myString[])
-{
-}
-
-//-------------------ADC--------------------------------------------------------------------
-void __ucHAL_ADC_configure()
+//-------------------BATTERY-----------------------------------------------------------------
+void __ucHAL_Battery_configure()
 {
     // Battery voltage level detection
     __ucDrivers_ADC_conf_IndependentClock_SysClkSource();
@@ -133,7 +143,7 @@ void __ucHAL_ADC_configure()
     __ucDrivers_ADC_enable_GPIO_Clock();
     __ucDrivers_ADC_conf_GPIO_Source();
 
-    __ucDrivers_ADC_disable_Clock();
+    __ucDrivers_ADC_disable_Clock(); // Clock Gating
 
     // Connection to charger detection
 }
@@ -141,14 +151,14 @@ void __ucHAL_ADC_configure()
 //-------------------SLEEPTIMER------------------------------------------------------------
 void __ucHAL_Sleeptimer_configure()
 {
-    __ucDrivers_TIM3_enable_Clock();
+    __ucDrivers_TIM3_enable_Clock(); // Clock gating
     __ucDrivers_TIM3_conf_Periphereal();
-    __ucDrivers_TIM3_disable_Clock();
+    __ucDrivers_TIM3_disable_Clock(); // Clock gating
 }
 
 void __ucHAL_Sleeptimer_startOneShot(uint16_t initialValue, uint16_t autoReloadValue)
 {
-    __ucDrivers_TIM3_enable_Clock();
+    __ucDrivers_TIM3_enable_Clock(); // Clock gating
     __ucDrivers_TIM3_function_startOneShotTimer(initialValue, autoReloadValue);
 }
 
@@ -166,7 +176,7 @@ SleepTimerValues __ucHAL_Sleeptimer_stopOneShot()
         NVIC_ClearPendingIRQ(TIM3_IRQn);
     }
 
-    __ucDrivers_TIM3_disable_Clock();
+    __ucDrivers_TIM3_disable_Clock(); // Clock gating
 
     return timerValues;
 }

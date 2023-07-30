@@ -36,6 +36,7 @@ void __controllerRXTask_init(void)
 void controllerRXTask(void *args __attribute__((unused)))
 {
     // HAL inizialization
+    __ucHAL_Bluetooth_configure();
 
     // Module inizialization
 

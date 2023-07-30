@@ -1,5 +1,5 @@
 #include "drivers.h"
-#include "masters.h"
+#include "dma.h"
 #include "stm32g431xx.h"
 
 //-------------------SYSTICK-----------------------------------------------------------------------------------
@@ -171,7 +171,7 @@ void __ucDrivers_LPTIM_conf_GPIO_Source()
 //-----------Functions
 
 // ------------------TIM2---------------------------------------
-//-----------Clocks
+
 void __ucDrivers_TIM2_enable_Clock()
 {
     RCC->APB1ENR1 |= RCC_APB1ENR1_TIM2EN;
@@ -195,7 +195,6 @@ void __ucDrivers_TIM2_disable_GPIO_Clock()
     RCC->AHB2ENR &= ~RCC_AHB2ENR_GPIOBEN;
 }
 
-//-----------Configurations
 void __ucDrivers_TIM2_conf_Periphereal()
 {
     TIM2->TISEL = (TIM2->TISEL & (~TIM_TISEL_TI1SEL)) | (0b0000 << TIM_TISEL_TI1SEL_Pos); // tim_ti1 input on TIMx_CH1
@@ -236,42 +235,82 @@ void __ucDrivers_TIM2_conf_GPIO_Source()
     GPIOB->AFR[0] = (GPIOB->AFR[0] & (~GPIO_AFRL_AFSEL3)) | (1 << GPIO_AFRL_AFSEL3_Pos);              // Alternate function 1
 }
 
-//-----------Functions
-
 // ------------------LPUART-------------------------------------
-#define UART_DMA_Transmission_Enabled
-//-----------Clocks
+void __ucDrivers_function_LPUART_Transmit_DMA(uint8_t *buffer, uint32_t nbytes);
+void __ucDrivers_function_LPUART_Transmit_POLLING(uint8_t *buffer, uint32_t nbytes);
+
 void __ucDrivers_LPUART_enable_Clock()
 {
+    RCC->APB1ENR2 |= RCC_APB1ENR2_LPUART1EN;
 }
 
 void __ucDrivers_LPUART_disable_Clock()
 {
+    RCC->APB1ENR2 &= ~RCC_APB1ENR2_LPUART1EN;
 }
 
 void __ucDrivers_LPUART_enable_GPIO_Clock()
 {
+    RCC->AHB2ENR |= RCC_AHB2ENR_GPIOAEN;
 }
 
 void __ucDrivers_LPUART_disable_GPIO_Clock()
 {
+    RCC->AHB2ENR &= ~RCC_AHB2ENR_GPIOAEN;
 }
 
 void __ucDrivers_LPUART_conf_IndependentClock_SysClkSource()
 {
+    RCC->CCIPR = (RCC->CCIPR & (~RCC_CCIPR_LPUART1SEL)) | (0b01 << RCC_CCIPR_LPUART1SEL_Pos);
 }
 
-//-----------Configurations
 void __ucDrivers_LPUART_conf_Periphereal()
 {
+    LPUART1->CR1 &= ~(USART_CR1_M0 | USART_CR1_M1);
+    LPUART1->BRR = 111112;                                                             // 256*50,000,000/111,112 = 115200 .0007% error
+    LPUART1->CR2 |= (LPUART1->CR2 & (~USART_CR2_STOP)) | (0b00 << USART_CR2_STOP_Pos); // 1 Stop bit
+    LPUART1->CR1 |= USART_CR1_RE;                                                      // Enable receiver
+    LPUART1->CR3 |= USART_CR3_DMAR;                                                    // Enable DMA Receiver
+    LPUART1->CR1 |= USART_CR1_TE;                                                      // Enable transmit
+    LPUART1->CR3 |= USART_CR3_DMAT;                                                    // Enable DMA Transmiter
+    LPUART1->CR1 |= USART_CR1_UE;                                                      // Enable uart
 }
 
 void __ucDrivers_LPUART_conf_GPIO_Source()
 {
+
+    // PA2 LPUART1_TX
+    GPIOA->MODER = (GPIOA->MODER & (~GPIO_MODER_MODE2)) | (0b10 << GPIO_MODER_MODE2_Pos);             // Alternate function mode
+    GPIOA->OTYPER &= (~GPIO_OTYPER_OT2);                                                              // Push pull
+    GPIOA->OSPEEDR = (GPIOA->OSPEEDR & (~GPIO_OSPEEDR_OSPEED2)) | (0b00 << GPIO_OSPEEDR_OSPEED2_Pos); // Low speed
+    GPIOA->PUPDR = (GPIOA->PUPDR & (~GPIO_PUPDR_PUPD2)) | (0b00 << GPIO_PUPDR_PUPD2_Pos);             // No pull up, no pull down
+    GPIOA->AFR[0] = (GPIOA->AFR[0] & (~GPIO_AFRL_AFSEL2)) | (12 << GPIO_AFRL_AFSEL2_Pos);             // Alternate function 7
+
+    // PA3 LPUART1_RX
+    GPIOA->MODER = (GPIOA->MODER & (~GPIO_MODER_MODE3)) | (0b10 << GPIO_MODER_MODE3_Pos);             // Alternate function mode
+    GPIOA->OTYPER &= (~GPIO_OTYPER_OT3);                                                              // Push pull
+    GPIOA->OSPEEDR = (GPIOA->OSPEEDR & (~GPIO_OSPEEDR_OSPEED3)) | (0b00 << GPIO_OSPEEDR_OSPEED3_Pos); // Low speed
+    GPIOA->PUPDR = (GPIOA->PUPDR & (~GPIO_PUPDR_PUPD3)) | (0b00 << GPIO_PUPDR_PUPD3_Pos);             // No pull up, no pull down
+    GPIOA->AFR[0] = (GPIOA->AFR[0] & (~GPIO_AFRL_AFSEL3)) | (12 << GPIO_AFRL_AFSEL3_Pos);             // Alternate function 7
 }
 
-//-----------Functions
 void __ucDrivers_LPUART_function_Transmit(uint8_t *buffer, uint32_t nbytes)
+{
+#ifdef UART_DMA_Transmission_Enabled
+    __ucDrivers_function_LPUART_Transmit_DMA(buffer, nbytes);
+#else
+    __ucDrivers_function_LPUART_Transmit_POLLING(buffer, nbytes);
+#endif
+}
+
+void __ucDrivers_function_LPUART_Transmit_DMA(uint8_t *buffer, uint32_t nbytes)
+{
+    __ucDrivers_DMA_function_StartChannel2ForLPUART_TX(buffer, nbytes);
+    __ucDrivers_DMA_function_WaitForChannel2TransfereComplete();
+    __ucDrivers_DMA_function_ClearChannel2TransfereComplete();
+}
+
+void __ucDrivers_function_LPUART_Transmit_POLLING(uint8_t *buffer __attribute__((unused)), uint32_t nbytes __attribute__((unused)))
 {
 }
 
@@ -354,9 +393,8 @@ void __ucDrivers_function_I2C_Transmit_DMA(uint8_t i2c_addr, uint8_t *buffer, ui
 
     I2C2->CR1 |= I2C_CR1_TXDMAEN; // Enable DMA transmit
     I2C2->CR2 |= I2C_CR2_START;   // Start generation
-    while (!(DMA1->ISR & DMA_ISR_TCIF3))
-        ;                            // Wait till transfere complete
-    DMA1->IFCR |= DMA_IFCR_CTCIF3;   // Clear transfere complete
+    __ucDrivers_DMA_function_WaitForChannel3TransfereComplete();
+    __ucDrivers_DMA_function_ClearChannel3TransfereComplete();
     I2C2->CR1 &= (~I2C_CR1_TXDMAEN); // Disable DMA transmit
 }
 

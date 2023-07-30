@@ -3,10 +3,9 @@
 #include "queue.h"
 #include "semphr.h"
 
-#include "ucSpecific/Internal/masters.h"
+#include "ucSpecific/Internal/dma.h"
 #include "ucSpecific/Internal/drivers.h"
 #include "ucSpecific/Public/hal.h"
-#include "main.h"
 
 #include "stm32g431xx.h"
 
@@ -68,21 +67,6 @@ int main(void)
   GPIOA->PUPDR = (GPIOA->PUPDR & (~GPIO_PUPDR_PUPD9)) | (0b00 << GPIO_PUPDR_PUPD9_Pos); //No Pull up down
   GPIOA->BSRR |= GPIO_BSRR_BS9;//Turn on PA9
   */
-
-  // UART1 GPIO CONFIGURATION
-  // PA10 UART1_RX
-  GPIOA->MODER = (GPIOA->MODER & (~GPIO_MODER_MODE10)) | (0b10 << GPIO_MODER_MODE10_Pos);             // Alternate function mode
-  GPIOA->OTYPER &= (~GPIO_OTYPER_OT10);                                                               // Push pull
-  GPIOA->OSPEEDR = (GPIOA->OSPEEDR & (~GPIO_OSPEEDR_OSPEED10)) | (0b00 << GPIO_OSPEEDR_OSPEED10_Pos); // Low speed
-  GPIOA->PUPDR = (GPIOA->PUPDR & (~GPIO_PUPDR_PUPD10)) | (0b00 << GPIO_PUPDR_PUPD10_Pos);             // No pull up, no pull down
-  GPIOA->AFR[1] = (GPIOA->AFR[1] & (~GPIO_AFRH_AFSEL10)) | (7 << GPIO_AFRH_AFSEL10_Pos);              // Alternate function 7
-
-  // PB6 UART1_TX
-  GPIOB->MODER = (GPIOB->MODER & (~GPIO_MODER_MODE6)) | (0b10 << GPIO_MODER_MODE6_Pos);             // Alternate function mode
-  GPIOB->OTYPER &= (~GPIO_OTYPER_OT6);                                                              // Push pull
-  GPIOB->OSPEEDR = (GPIOB->OSPEEDR & (~GPIO_OSPEEDR_OSPEED6)) | (0b00 << GPIO_OSPEEDR_OSPEED6_Pos); // Low speed
-  GPIOB->PUPDR = (GPIOB->PUPDR & (~GPIO_PUPDR_PUPD6)) | (0b00 << GPIO_PUPDR_PUPD6_Pos);             // No pull up, no pull down
-  GPIOB->AFR[0] = (GPIOB->AFR[0] & (~GPIO_AFRL_AFSEL6)) | (7 << GPIO_AFRL_AFSEL6_Pos);              // Alternate function 7
 
   // TIM2 GPIO CONFIGURATION
 

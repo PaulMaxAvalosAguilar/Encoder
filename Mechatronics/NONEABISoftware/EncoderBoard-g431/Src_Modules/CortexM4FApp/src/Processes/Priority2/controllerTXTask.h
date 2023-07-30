@@ -16,10 +16,11 @@ void __controllerTXTask_init(void);
 typedef enum // IPCMT: Inter Process Communication Message Type
 {
     ControllerTXTask_IPMCT_01_SendEncoderData,
-    ControllerTXTask_IPMCT_02_ConfirmEncoderTaskStarted,
-    ControllerTXTask_IPMCT_03_ConfirmEncoderTaskStoped,
-    ControllerTXTask_IPMCT_04_SendBatteryLevel,
-    ControllerTXTask_IPMCT_05_SendChargingStatus
+    ControllerTXTask_IPMCT_02_ControllerConnectionStatus,
+    ControllerTXTask_IPMCT_03_ConfirmEncoderTaskStarted,
+    ControllerTXTask_IPMCT_04_ConfirmEncoderTaskStoped,
+    ControllerTXTask_IPMCT_05_SendBatteryLevel,
+    ControllerTXTask_IPMCT_06_SendChargingStatus
 } ControllerTXTask_IPC_Message_Type;
 
 typedef struct
@@ -36,9 +37,17 @@ typedef struct
     union
     {
         EncoderDataType _01_encoderData;
-        uint8_t _02_isEncoderTaskStarted;
-        uint8_t _03_isEncoderTaskStopped;
-        uint16_t _04_batteryLevel;
-        uint8_t _05_chargingStatus;
+        uint8_t _02_isControllerConnected;
+        uint8_t _03_isEncoderTaskStarted;
+        uint8_t _04_isEncoderTaskStopped;
+        uint16_t _05_batteryLevel;
+        uint8_t _06_isEncoderCharging;
     } payload;
 } ControllerTXTask_IPC_Message_Struct;
+
+void __IPC_controllerTXTask_SendMessage_SendEncoderData(uint16_t rom, uint16_t meanPropVelocity, uint16_t peakVelocity);
+void __IPC_controllerTXTask_SendMessage_ControllerConnectionStatus(uint8_t isControllerConected);
+void __IPC_controllerTXTask_SendMessage_ConfirmEncoderTaskStarted(uint8_t isEncoderTaskStarted);
+void __IPC_controllerTXTask_SendMessage_ConfirmEncoderTaskStoped(uint8_t isEncoderTaskStopped);
+void __IPC_controllerTXTask_SendMessage_SendBatteryLevel(uint16_t batteryLevel);
+void __IPC_controllerTXTask_SendMessage_SendChargingStatus(uint8_t isEncoderCharging);

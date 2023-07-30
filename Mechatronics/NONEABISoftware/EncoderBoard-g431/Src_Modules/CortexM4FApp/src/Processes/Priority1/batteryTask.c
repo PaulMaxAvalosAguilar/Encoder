@@ -7,6 +7,7 @@
 
 // Processes
 #include "Processes/Priority2/displayTask.h"
+#include "Processes/Priority2/controllerTXTask.h"
 
 // Utilities
 
@@ -63,7 +64,7 @@ void __batteryTask_enterDischargingRate(void)
 void batteryTask(void *args __attribute__((unused)))
 {
     // HAL inizialization
-    __ucHAL_ADC_configure();
+    __ucHAL_Battery_configure();
 
     // Module inizialization
 
@@ -71,13 +72,18 @@ void batteryTask(void *args __attribute__((unused)))
     BatteryTask_IPC_Message_Struct rMessage; // received Message
     int i = 10;
     // Show that task inizialization worked
-    __IPC_batteryTask_SendMessage_PerformBatteryAdcConversion(1);
+    __IPC_displayTask_SendMessage_ShowBatteryTaskInitializationStatus(1);
+
+    // Pre loop tasks
+    __IPC_displayTask_SendMessage_ShowBatteryLevel(i);
+    __IPC_controllerTXTask_SendMessage_SendBatteryLevel(i);
 
     for (;;)
     {
         xQueueReceive(batteryTask_QueueHandle, &rMessage, portMAX_DELAY);
 
         __IPC_displayTask_SendMessage_ShowBatteryLevel(i++);
+        __IPC_controllerTXTask_SendMessage_SendBatteryLevel(i);
     }
 }
 

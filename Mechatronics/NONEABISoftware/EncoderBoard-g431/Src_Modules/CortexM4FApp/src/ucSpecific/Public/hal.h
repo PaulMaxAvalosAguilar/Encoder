@@ -28,17 +28,20 @@ void __ucHAL_DMA_configure(void);
 void __ucHAL_RtosTimer_function_pause(void);
 void __ucHAL_RtosTimer_function_resume(void);
 
+//-------------------BLUETOOTH-------------------------------------------------------------
+#define BLUETOOTH_RX_BUFFER_LEN 256
+extern uint8_t bluetoothReceiveBuffer[BLUETOOTH_RX_BUFFER_LEN];
+
+void __ucHAL_Bluetooth_configure(void);
+void __ucHAL_Bluetooth_function_transmit(uint8_t *buffer, uint32_t nbytes);
+
 //-------------------DISPLAY---------------------------------------------------------------
 void __ucHAL_Display_configure(void);
 void __ucHAL_Display_function_transmit(
     uint8_t i2c_addr, uint8_t *buffer, uint32_t nbytes);
 
-//-------------------BLUETOOTH-------------------------------------------------------------
-void __ucHAL_Bluetooth_configure(void);
-void __ucHAL_Bluetooth_function_transmitString(const char myString[]);
-
-//-------------------ADC-------------------------------------------------------------------
-void __ucHAL_ADC_configure(void);
+//-------------------BATTERY---------------------------------------------------------------
+void __ucHAL_Battery_configure(void);
 
 //-------------------SLEEPTIMER------------------------------------------------------------
 typedef struct SleepTimerValues

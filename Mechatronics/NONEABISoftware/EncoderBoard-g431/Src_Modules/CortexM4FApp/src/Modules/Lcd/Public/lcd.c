@@ -5,10 +5,6 @@
 #include <string.h>
 #include "Utilities/itoa.h"
 
-//-Deps----------Defined elsewhere
-void transmit(uint8_t i2c_addr, uint8_t *buffer, uint32_t nbytes);
-//-Deps----------Defined elsewhere
-
 static struct
 {
   uint8_t x;
@@ -19,13 +15,13 @@ uint8_t lcdSendBuffer[256];
 
 void lcd_command(uint8_t cmd[], uint8_t size)
 {
-  TRANSMIT(LCD_I2C_ADR, cmd, size);
+  LCD_TRANSMIT(LCD_I2C_ADR, cmd, size);
 }
 
 void lcd_data(uint8_t data[], uint16_t size)
 {
   data[0] = 0x40; // 0x00 for command, 0x40 for data
-  TRANSMIT(LCD_I2C_ADR, data, size);
+  LCD_TRANSMIT(LCD_I2C_ADR, data, size);
 }
 
 void lcd_init()
