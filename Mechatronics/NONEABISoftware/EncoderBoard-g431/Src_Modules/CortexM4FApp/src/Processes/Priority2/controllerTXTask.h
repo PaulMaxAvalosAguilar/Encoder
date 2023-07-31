@@ -45,7 +45,9 @@ typedef struct
     } payload;
 } ControllerTXTask_IPC_Message_Struct;
 
-void __IPC_controllerTXTask_SendMessage_SendEncoderData(uint16_t rom, uint16_t meanPropVelocity, uint16_t peakVelocity);
+void __IPC_controllerTXTask_SendMessage_SendEncoderData(uint16_t rom,
+                                                        uint16_t meanPropVelocity,
+                                                        uint16_t peakVelocity);
 void __IPC_controllerTXTask_SendMessage_ControllerConnectionStatus(uint8_t isControllerConected);
 void __IPC_controllerTXTask_SendMessage_ConfirmEncoderTaskStarted(uint8_t isEncoderTaskStarted);
 void __IPC_controllerTXTask_SendMessage_ConfirmEncoderTaskStoped(uint8_t isEncoderTaskStopped);

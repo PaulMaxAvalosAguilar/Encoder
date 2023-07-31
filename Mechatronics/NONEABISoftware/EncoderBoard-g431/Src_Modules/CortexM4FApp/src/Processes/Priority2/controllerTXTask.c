@@ -37,7 +37,6 @@ void __controllerTXTask_init(void)
 void controllerTXTask(void *args __attribute__((unused)))
 {
     // HAL inizialization
-    //__ucHAL_Bluetooth_configure();
     // Module inizialization
 
     // Internal Variable Inizialization
@@ -69,7 +68,7 @@ void controllerTXTask(void *args __attribute__((unused)))
             break;
         case ControllerTXTask_IPMCT_05_SendBatteryLevel:
             batteryLevel = rMessage.payload._05_batteryLevel;
-            // bluetoothSendBatteryLevel(batteryLevel);
+            bluetoothSendBatteryLevel(batteryLevel);
             break;
         case ControllerTXTask_IPMCT_06_SendChargingStatus:
             bluetoothSendChargingStatus(rMessage.payload._06_isEncoderCharging);
