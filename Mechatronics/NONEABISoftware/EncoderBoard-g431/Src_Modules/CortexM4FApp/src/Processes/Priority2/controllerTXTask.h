@@ -33,7 +33,7 @@ typedef struct
 typedef struct
 {
     // IPCMT: Inter Process Communication Message Type
-    ControllerTXTask_IPC_Message_Type batteryTask_IPCMT;
+    ControllerTXTask_IPC_Message_Type controllerTXTask_IPCMT;
     union
     {
         EncoderDataType _01_encoderData;

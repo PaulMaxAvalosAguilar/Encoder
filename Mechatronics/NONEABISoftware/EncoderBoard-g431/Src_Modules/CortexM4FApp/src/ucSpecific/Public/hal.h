@@ -2,6 +2,7 @@
 #define HAL_H
 
 #include <inttypes.h>
+#include "Utilities/RING/ring.h"
 
 /*
 This file expose the functions an encoder should need to work. They hide the internal
@@ -27,6 +28,20 @@ void __ucHAL_DMA_configure(void);
 //-------------------RTOSTIMER-------------------------------------------------------------
 void __ucHAL_RtosTimer_function_pause(void);
 void __ucHAL_RtosTimer_function_resume(void);
+
+//-------------------ENCODER---------------------------------------------------------------
+#define ENCODER_BUFFER_SIZE 256
+extern ring_t encoder_ring;
+typedef struct encoderValues_t
+{
+    uint16_t encoderCounter;
+    uint32_t inputCapture;
+} encoderValues_t;
+extern encoderValues_t encoderBuffer[ENCODER_BUFFER_SIZE];
+void __ucHAL_Encoder_configure(void);
+
+void __ucHAL_Encoder_function_ITAddEncoderValues(void);
+void __ucHAL_Encoder_function_ITReadEncoderValues(void);
 
 //-------------------BLUETOOTH-------------------------------------------------------------
 #define BLUETOOTH_RX_BUFFER_LEN 256

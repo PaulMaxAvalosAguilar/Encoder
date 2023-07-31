@@ -6,7 +6,7 @@
 // Task Parameters-----------------------------------------------
 
 #define ENCODER_TASK_STACK_SIZE 128
-#define ENCODER_TASK_STACK_PRIORITY 3
+#define ENCODER_TASK_STACK_PRIORITY 4
 
 // Task Manipulation---------------------------------------------
 void __encoderTask_init(void);
@@ -29,7 +29,7 @@ typedef struct
 typedef struct
 {
     // IPCMT: Inter Process Communication Message Type
-    EncoderTask_IPC_Message_Type batteryTask_IPCMT;
+    EncoderTask_IPC_Message_Type encoderTask_IPCMT;
     union
     {
         measuringParameters _01_StartMeasuring;

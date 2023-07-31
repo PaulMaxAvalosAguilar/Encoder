@@ -50,7 +50,7 @@ void controllerTXTask(void *args __attribute__((unused)))
     {
         xQueueReceive(controllerTXTask_QueueHandle, &rMessage, portMAX_DELAY);
 
-        switch (rMessage.batteryTask_IPCMT) // Check received message type
+        switch (rMessage.controllerTXTask_IPCMT) // Check received message type
         {
         case ControllerTXTask_IPMCT_01_SendEncoderData:
             bluetoothSendEncoderData(rMessage.payload._01_encoderData.rom,
@@ -80,7 +80,7 @@ void controllerTXTask(void *args __attribute__((unused)))
 void __IPC_controllerTXTask_SendMessage_SendEncoderData(uint16_t rom, uint16_t meanPropVelocity, uint16_t peakVelocity)
 {
     ControllerTXTask_IPC_Message_Struct message;
-    message.batteryTask_IPCMT = ControllerTXTask_IPMCT_01_SendEncoderData;
+    message.controllerTXTask_IPCMT = ControllerTXTask_IPMCT_01_SendEncoderData;
     message.payload._01_encoderData.rom = rom;
     message.payload._01_encoderData.meanPropVelocity = meanPropVelocity;
     message.payload._01_encoderData.peakVelocity = peakVelocity;
@@ -90,7 +90,7 @@ void __IPC_controllerTXTask_SendMessage_SendEncoderData(uint16_t rom, uint16_t m
 void __IPC_controllerTXTask_SendMessage_ControllerConnectionStatus(uint8_t isControllerConected)
 {
     ControllerTXTask_IPC_Message_Struct message;
-    message.batteryTask_IPCMT = ControllerTXTask_IPMCT_02_ControllerConnectionStatus;
+    message.controllerTXTask_IPCMT = ControllerTXTask_IPMCT_02_ControllerConnectionStatus;
     message.payload._02_isControllerConnected = isControllerConected;
     xQueueSendToBack(controllerTXTask_QueueHandle, &message, 0);
 }
@@ -98,7 +98,7 @@ void __IPC_controllerTXTask_SendMessage_ControllerConnectionStatus(uint8_t isCon
 void __IPC_controllerTXTask_SendMessage_ConfirmEncoderTaskStarted(uint8_t isEncoderTaskStarted)
 {
     ControllerTXTask_IPC_Message_Struct message;
-    message.batteryTask_IPCMT = ControllerTXTask_IPMCT_03_ConfirmEncoderTaskStarted;
+    message.controllerTXTask_IPCMT = ControllerTXTask_IPMCT_03_ConfirmEncoderTaskStarted;
     message.payload._03_isEncoderTaskStarted = isEncoderTaskStarted;
     xQueueSendToBack(controllerTXTask_QueueHandle, &message, 0);
 }
@@ -106,7 +106,7 @@ void __IPC_controllerTXTask_SendMessage_ConfirmEncoderTaskStarted(uint8_t isEnco
 void __IPC_controllerTXTask_SendMessage_ConfirmEncoderTaskStoped(uint8_t isEncoderTaskStopped)
 {
     ControllerTXTask_IPC_Message_Struct message;
-    message.batteryTask_IPCMT = ControllerTXTask_IPMCT_04_ConfirmEncoderTaskStoped;
+    message.controllerTXTask_IPCMT = ControllerTXTask_IPMCT_04_ConfirmEncoderTaskStoped;
     message.payload._04_isEncoderTaskStopped = isEncoderTaskStopped;
     xQueueSendToBack(controllerTXTask_QueueHandle, &message, 0);
 }
@@ -114,7 +114,7 @@ void __IPC_controllerTXTask_SendMessage_ConfirmEncoderTaskStoped(uint8_t isEncod
 void __IPC_controllerTXTask_SendMessage_SendBatteryLevel(uint16_t batteryLevel)
 {
     ControllerTXTask_IPC_Message_Struct message;
-    message.batteryTask_IPCMT = ControllerTXTask_IPMCT_05_SendBatteryLevel;
+    message.controllerTXTask_IPCMT = ControllerTXTask_IPMCT_05_SendBatteryLevel;
     message.payload._05_batteryLevel = batteryLevel;
     xQueueSendToBack(controllerTXTask_QueueHandle, &message, 0);
 }
@@ -122,7 +122,7 @@ void __IPC_controllerTXTask_SendMessage_SendBatteryLevel(uint16_t batteryLevel)
 void __IPC_controllerTXTask_SendMessage_SendChargingStatus(uint8_t isEncoderCharging)
 {
     ControllerTXTask_IPC_Message_Struct message;
-    message.batteryTask_IPCMT = ControllerTXTask_IPMCT_06_SendChargingStatus;
+    message.controllerTXTask_IPCMT = ControllerTXTask_IPMCT_06_SendChargingStatus;
     message.payload._06_isEncoderCharging = isEncoderCharging;
     xQueueSendToBack(controllerTXTask_QueueHandle, &message, 0);
 }

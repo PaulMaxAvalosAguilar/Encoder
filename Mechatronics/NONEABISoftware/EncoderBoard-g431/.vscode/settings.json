@@ -10,6 +10,7 @@
     "freertos.h": "c",
     "deps.h": "c",
     "masters.h": "c",
-    "drivers.h": "c"
+    "drivers.h": "c",
+    "queue.h": "c"
   }
 }

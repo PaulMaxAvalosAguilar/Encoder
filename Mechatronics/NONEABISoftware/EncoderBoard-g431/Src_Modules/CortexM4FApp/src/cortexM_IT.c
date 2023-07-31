@@ -1,5 +1,6 @@
 #include "FreeRTOS.h"
 #include "task.h"
+#include "stm32g431xx.h"
 
 void NMI_Handler(void);
 void HardFault_Handler(void);
@@ -10,6 +11,7 @@ void SVC_Handler(void) __attribute__((naked));
 void DebugMon_Handler(void);
 void PendSV_Handler(void) __attribute__((naked));
 void SysTick_Handler(void);
+void TIM2_IRQHandler(void);
 
 void NMI_Handler(void)
 {
@@ -145,4 +147,9 @@ known. */
         }
     }
     portENABLE_INTERRUPTS();
+}
+
+void TIM2_IRQHandler(void)
+{
+    TIM2->SR &= ~TIM_SR_CC1IF;
 }

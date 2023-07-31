@@ -13,7 +13,7 @@ void __ucHAL_Interrupts_configure()
     NVIC_SetPriority(LPUART1_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 1, 0));
     NVIC_SetPriority(EXTI15_10_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 2, 0));
 
-    NVIC_EnableIRQ(TIM2_IRQn);
+    // NVIC_EnableIRQ(TIM2_IRQn);
     NVIC_EnableIRQ(TIM3_IRQn);
     NVIC_EnableIRQ(EXTI15_10_IRQn);
     NVIC_EnableIRQ(LPUART1_IRQn);
@@ -93,7 +93,45 @@ void __ucHAL_RtosTimer_function_resume()
     __ucDrivers_SYSTICK_function_enableTimer();
 }
 
-//-------------------BLUETOOH---------------------------------------------------------------
+//-------------------ENCODER---------------------------------------------------------------
+ring_t encoder_ring;
+encoderValues_t encoderBuffer[ENCODER_BUFFER_SIZE];
+
+volatile encoderValues_t encInterruptValues;
+volatile uint32_t encoderTimerCounter = 0;
+volatile uint32_t capturedTime = 0;
+
+void __ucHAL_Encoder_configure()
+{
+    __ucDrivers_LPTIM_conf_IndependentClock_SysClkSource();
+    __ucDrivers_LPTIM_enable_Clock();
+    __ucDrivers_LPTIM_conf_Periphereal();
+
+    __ucDrivers_LPTIM_enable_GPIO_Clock();
+    __ucDrivers_LPTIM_conf_GPIO_Source();
+
+    __ucDrivers_TIM2_enable_Clock();
+    __ucDrivers_TIM2_enable_GPIO_Clock();
+
+    __ucDrivers_TIM2_conf_Periphereal();
+    __ucDrivers_TIM2_conf_GPIO_Source();
+
+    ring_buffer_init(&encoder_ring, encoderBuffer, sizeof(encoderBuffer[0]), sizeof(encoderBuffer));
+}
+
+void __ucHAL_Encoder_function_ITAddEncoderValues()
+{
+    encInterruptValues.encoderCounter = 1;
+    encInterruptValues.inputCapture = 1;
+
+    ring_buffer_put(&encoder_ring, (encoderValues_t *)&encInterruptValues);
+}
+
+void __ucHAL_Encoder_function_ITReadEncoderValues()
+{
+}
+
+//-------------------BLUETOOH--------------------------------------------------------------
 uint8_t bluetoothReceiveBuffer[BLUETOOTH_RX_BUFFER_LEN] = {0};
 
 void __ucHAL_Bluetooth_configure()
