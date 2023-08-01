@@ -3,6 +3,8 @@
 #include "queue.h"
 #include "task.h"
 
+#include "ucSpecific/Public/hal.h"
+
 #include "Processes/Priority2/displayTask.h"
 
 TaskHandle_t encoderTask_Handle = NULL;
@@ -31,13 +33,26 @@ void encoderTask(void *args __attribute((unused)))
 
     // Internal Variable Inizialization
     EncoderTask_IPC_Message_Struct rMessage; // receivedMessage
+    encoderValues_t receivedEncoderValues;
 
     // Show that task inizialization worked
     __IPC_displayTask_SendMessage_ShowEncoderTaskIntizializationStatus(1);
+    __IPC_displayTask_SendMessage_ShowEncoderReps((uint16_t)receivedEncoderValues.encoderCounter);
 
     for (;;)
     {
-        xQueueReceive(encoderTask_QueueHandle, &rMessage, portMAX_DELAY);
+        // xQueueReceive(encoderTask_QueueHandle, &rMessage, portMAX_DELAY);
+
+        while (__ucHAL_Encoder_function_ITReadEncoderValues(&receivedEncoderValues) != -1)
+        {
+            static int i = 0;
+            receivedEncoderValues.encoderCounter;
+            receivedEncoderValues.inputCapture;
+
+            __IPC_displayTask_SendMessage_ShowEncoderReps(++i);
+        }
+
+        vTaskDelay(pdMS_TO_TICKS(50));
     }
 }
 

@@ -41,7 +41,7 @@ extern encoderValues_t encoderBuffer[ENCODER_BUFFER_SIZE];
 void __ucHAL_Encoder_configure(void);
 
 void __ucHAL_Encoder_function_ITAddEncoderValues(void);
-void __ucHAL_Encoder_function_ITReadEncoderValues(void);
+int __ucHAL_Encoder_function_ITReadEncoderValues(void *data);
 
 //-------------------BLUETOOTH-------------------------------------------------------------
 #define BLUETOOTH_RX_BUFFER_LEN 256

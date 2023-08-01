@@ -94,7 +94,7 @@ void displayTask(void *args __attribute__((unused)))
             break;
 
         case DisplayTask_IPMCT_05_ShowEncoderReps:
-
+            lcdPutIntegerAtPos(rMessage.payload._05_numberOfReps, 1, ScreenPosition_EncoderReps);
             break;
         case DisplayTask_IPCMT_06_ShowControllerTaskConnectionStatus:
             break;

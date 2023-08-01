@@ -121,14 +121,17 @@ void __ucHAL_Encoder_configure()
 
 void __ucHAL_Encoder_function_ITAddEncoderValues()
 {
-    encInterruptValues.encoderCounter = 1;
-    encInterruptValues.inputCapture = 1;
+    TIM2->SR &= ~TIM_SR_CC1IF;
+
+    encInterruptValues.encoderCounter = LPTIM1->CNT;
+    encInterruptValues.inputCapture = 0;
 
     ring_buffer_put(&encoder_ring, (encoderValues_t *)&encInterruptValues);
 }
 
-void __ucHAL_Encoder_function_ITReadEncoderValues()
+int __ucHAL_Encoder_function_ITReadEncoderValues(void *data)
 {
+    return ring_buffer_get(&encoder_ring, data);
 }
 
 //-------------------BLUETOOH--------------------------------------------------------------

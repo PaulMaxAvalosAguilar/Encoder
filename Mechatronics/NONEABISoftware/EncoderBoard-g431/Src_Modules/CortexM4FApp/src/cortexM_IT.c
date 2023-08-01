@@ -151,5 +151,5 @@ known. */
 
 void TIM2_IRQHandler(void)
 {
-    TIM2->SR &= ~TIM_SR_CC1IF;
+    __ucHAL_Encoder_function_ITAddEncoderValues();
 }
